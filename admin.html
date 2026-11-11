@@ -52,7 +52,8 @@
   .stat span{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   .stat b{display:block;font-family:"Cormorant Garamond",serif;font-size:2.2rem;color:var(--wine);line-height:1.1}
   .panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.2rem}
-  .filters{display:grid;grid-template-columns:2fr repeat(6,1fr) auto;gap:.7rem;align-items:end;margin-bottom:1rem}
+  .filters{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem;align-items:end;margin-bottom:1rem}
+  .filters .search{grid-column:span 2}
   .age-range{display:flex;gap:.3rem}
   .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;gap:1rem;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
   .table-wrap{overflow-x:auto}
@@ -103,7 +104,7 @@
   .modal-head h2{font-size:1.9rem}
   .modal-body{padding:1.3rem 1.5rem;display:grid;gap:1.2rem}
   .kv{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem 1rem}
-  .kv div span{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .kv > div > span:first-child{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
   .block h3{font-size:1.25rem;margin-bottom:.4rem}
   .block p{white-space:pre-wrap;color:var(--ink)}
   .tags{display:flex;flex-wrap:wrap;gap:.3rem}
@@ -113,14 +114,14 @@
   .x{background:none;border:0;font-size:1.6rem;cursor:pointer;color:var(--muted);line-height:1}
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--wine);color:#fff;padding:.7rem 1.2rem;border-radius:999px;font-size:.9rem;z-index:100;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
 
-  @media (max-width:1100px){.filters{grid-template-columns:1fr 1fr 1fr}.filters .search{grid-column:1/-1}}
+  
   @media (max-width:760px){
     .stats{grid-template-columns:1fr 1fr}
     .friend,.friend fieldset,.kv{grid-template-columns:1fr}
     .pairs{grid-template-columns:1fr}
     .pay-form{grid-template-columns:1fr 1fr}
     .who span{display:none}
-    .filters{grid-template-columns:1fr 1fr}
+    .filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}
   }
 </style>
 </head>
@@ -167,10 +168,14 @@
     <section id="tab-cadastros" class="panel">
       <div class="filters">
         <div class="search"><label>Buscar</label><input id="fBusca" placeholder="Nome, e-mail, WhatsApp, cidade…"></div>
-        <div><label>Gênero</label><select id="fGenero"><option value="">Todos</option><option>Homem</option><option>Mulher</option><option>Prefiro não dizer</option></select></div>
-        <div><label>Procura</label><select id="fProcura"><option value="">Todos</option><option>Homem</option><option>Mulher</option><option>Tanto faz</option></select></div>
+        <div><label>Gênero</label><select id="fGenero" data-o="genero"></select></div>
+        <div><label>Procura</label><select id="fProcura" data-o="procura_genero"></select></div>
         <div><label>Idade</label><div class="age-range"><input id="fIdMin" type="number" placeholder="de" min="18"><input id="fIdMax" type="number" placeholder="até" min="18"></div></div>
-        <div><label>Intenção</label><select id="fIntencao"><option value="">Todas</option><option>Sério / namoro</option><option>Casamento</option><option>Amizade que pode virar algo mais</option></select></div>
+        <div><label>Estado</label><select id="fUf" data-o="uf"></select></div>
+        <div><label>Religião</label><select id="fReligiao" data-o="religiao"></select></div>
+        <div><label>Política</label><select id="fPolitica" data-o="politica"></select></div>
+        <div><label>Intenção</label><select id="fIntencao" data-o="intencao"></select></div>
+        <div><label>Fuma</label><select id="fFuma" data-o="fuma"></select></div>
         <div><label>Já pagou</label><select id="fPagou"><option value="">Todos</option><option value="sim">Sim</option><option value="nao">Não</option></select></div>
         <div><label>Status</label><select id="fStatus"><option value="">Todos</option><option value="ativo">Ativo</option><option value="pausado">Pausado</option><option value="encerrado">Encerrado</option></select></div>
         <div><button class="btn ghost" id="fLimpar" type="button">Limpar</button></div>
@@ -181,7 +186,7 @@
           <thead><tr>
             <th data-sort="created_at">Data</th><th data-sort="nome">Nome</th><th data-sort="idade">Idade</th>
             <th data-sort="genero">Gênero</th><th data-sort="procura_genero">Procura</th><th data-sort="cidade">Cidade</th>
-            <th data-sort="intencao">Intenção</th><th>WhatsApp</th><th data-sort="ja_pagou">Já pagou</th><th data-sort="status">Status</th>
+            <th data-sort="religiao">Religião</th><th data-sort="politica">Política</th><th>WhatsApp</th><th data-sort="ja_pagou">Já pagou</th><th data-sort="status">Status</th>
           </tr></thead>
           <tbody id="tbCad"></tbody>
         </table>
@@ -196,7 +201,7 @@
         <div><label>Buscar pessoa</label><input id="pBusca" placeholder="Nome…"></div>
         <div><button class="btn ghost" id="recarregarPares" type="button">↻ Atualizar</button></div>
       </div>
-      <p class="muted" style="font-size:.88rem;margin-bottom:1rem">Um par aparece aqui quando cada pessoa se encaixa no que a outra procura (gênero, faixa de idade e distância). A pontuação mede quanto a personalidade de cada uma combina com o que a outra deseja, com bônus quando buscam o mesmo tipo de relacionamento.</p>
+      <p class="muted" style="font-size:.88rem;margin-bottom:1rem">Um par aparece aqui quando cada pessoa se encaixa no que a outra procura e nos seus itens inegociáveis: gênero, idade, distância, religião, política, cigarro e filhos. A pontuação mede o resto: personalidade, interesses em comum, tipo físico, altura, bebida e vontade de ter filhos — com bônus quando buscam o mesmo tipo de relacionamento.</p>
       <div class="pairs" id="pairs"></div>
     </section>
 
@@ -204,24 +209,12 @@
     <section id="tab-amigo" class="panel hidden">
       <form id="friendForm">
         <div class="friend">
-          <fieldset>
-            <legend>Como é o amigo / amiga</legend>
+          <fieldset id="amigoComo"><legend>Como é o amigo / amiga</legend>
             <div class="full"><label>Nome (só para referência)</label><input name="nome" placeholder="Ex.: Paulo, amigo do trabalho"></div>
-            <div><label>Gênero</label><select name="genero" required><option value="">Selecione</option><option>Homem</option><option>Mulher</option><option>Prefiro não dizer</option></select></div>
-            <div><label>Idade</label><input name="idade" type="number" min="18" max="120" required></div>
-            <div class="full"><label>Cidade / Estado</label><input name="cidade" placeholder="Porto Alegre / RS" required></div>
-            <div class="full"><label>Personalidade</label><div class="chips" data-name="personalidade"></div></div>
           </fieldset>
-          <fieldset>
-            <legend>Quem ele(a) procura</legend>
-            <div><label>Procura</label><select name="procura_genero" required><option value="">Selecione</option><option>Homem</option><option>Mulher</option><option>Tanto faz</option></select></div>
-            <div><label>Distância</label><select name="distancia"><option>Mesma cidade</option><option selected>Mesmo estado</option><option>Qualquer lugar do Brasil</option></select></div>
-            <div><label>Idade de</label><input name="idade_min" type="number" min="18" value="25"></div>
-            <div><label>até</label><input name="idade_max" type="number" min="18" value="45"></div>
-            <div class="full"><label>A pessoa ideal é</label><div class="chips" data-name="deseja"></div></div>
-            <div class="full"><label class="check"><input type="checkbox" name="mutuo" checked> Mostrar só quem também aceitaria o amigo (gênero, idade e distância)</label></div>
-          </fieldset>
+          <fieldset id="amigoProcura"><legend>Quem ele(a) procura</legend></fieldset>
         </div>
+        <label class="check" style="margin-bottom:1rem"><input type="checkbox" name="mutuo" checked> Mostrar só quem também aceitaria o amigo (inclusive os inegociáveis da outra pessoa)</label>
         <button class="btn" type="submit">Procurar no banco de cadastros ♥</button>
       </form>
       <div id="friendResults" style="margin-top:1.4rem"></div>
@@ -237,6 +230,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
+<script src="assets/campos.js"></script>
 <script>
 const { supabaseUrl, supabaseKey } = window.SNM_CONFIG;
 const sb = supabase.createClient(supabaseUrl, supabaseKey);
@@ -246,7 +240,6 @@ const fmtData = d => new Date(d).toLocaleDateString('pt-BR');
 const fmtHora = d => new Date(d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const zap = w => 'https://wa.me/' + (String(w).replace(/\D/g, '').replace(/^(?!55)/, '55'));
-const PERSONALIDADES = ['Romântico(a)','Caseiro(a)','Aventureiro(a)','Extrovertido(a)','Tímido(a)','Religioso(a)','Esportista','Bem-humorado(a)','Trabalhador(a)','Família em primeiro lugar'];
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
 
 let CAD = [], PARES = [], byId = {}, sortKey = 'created_at', sortDir = -1;
@@ -294,12 +287,13 @@ async function carregarCadastros() {
   renderCadastros();
 }
 function filtrados() {
+  const uf = $('#fUf').value, rel = $('#fReligiao').value, pol = $('#fPolitica').value, fu = $('#fFuma').value;
   const q = norm($('#fBusca').value), g = $('#fGenero').value, p = $('#fProcura').value, it = $('#fIntencao').value,
         pg = $('#fPagou').value, st = $('#fStatus').value, mn = +$('#fIdMin').value || 0, mx = +$('#fIdMax').value || 999;
   return CAD.filter(c =>
     (!q || norm([c.nome, c.email, c.whatsapp, c.cidade].join(' ')).includes(q)) &&
     (!g || c.genero === g) && (!p || c.procura_genero === p) && (!it || c.intencao === it) &&
-    (!st || c.status === st) && (!pg || (pg === 'sim') === c.ja_pagou) && c.idade >= mn && c.idade <= mx
+    (!st || c.status === st) && (!uf || c.uf === uf) && (!rel || c.religiao === rel) && (!pol || c.politica === pol) && (!fu || c.fuma === fu) && (!pg || (pg === 'sim') === c.ja_pagou) && c.idade >= mn && c.idade <= mx
   ).sort((a, b) => { const x = a[sortKey] ?? '', y = b[sortKey] ?? ''; return (x > y ? 1 : x < y ? -1 : 0) * sortDir; });
 }
 const badgePagou = c => c.ja_pagou ? `<span class="badge sim">Sim${c.qtd_pagamentos > 1 ? ' · ' + c.qtd_pagamentos + 'x' : ''}</span>` : '<span class="badge nao">Não</span>';
@@ -310,11 +304,11 @@ function renderCadastros() {
   $('#tbCad').innerHTML = lista.length ? lista.map(c => `
     <tr data-id="${c.id}">
       <td>${fmtData(c.created_at)}</td><td><b>${esc(c.nome)}</b></td><td>${c.idade}</td>
-      <td>${esc(c.genero)}</td><td>${esc(c.procura_genero)}</td><td>${esc(c.cidade)}</td>
-      <td>${esc(c.intencao || '–')}</td><td>${esc(c.whatsapp)}</td><td>${badgePagou(c)}</td><td>${badgeStatus(c.status)}</td>
-    </tr>`).join('') : `<tr><td colspan="10" class="empty">${CAD.length ? 'Nenhum cadastro com esses filtros.' : 'Ainda não há cadastros. Eles aparecem aqui assim que alguém se cadastrar no site.'}</td></tr>`;
+      <td>${esc(c.genero)}</td><td>${esc(c.procura_genero)}</td><td>${esc(c.cidade)} / ${esc(c.uf)}</td>
+      <td>${esc(c.religiao || '–')}</td><td>${esc(c.politica || '–')}</td><td>${esc(c.whatsapp)}</td><td>${badgePagou(c)}</td><td>${badgeStatus(c.status)}</td>
+    </tr>`).join('') : `<tr><td colspan="11" class="empty">${CAD.length ? 'Nenhum cadastro com esses filtros.' : 'Ainda não há cadastros. Eles aparecem aqui assim que alguém se cadastrar no site.'}</td></tr>`;
 }
-['#fBusca', '#fGenero', '#fProcura', '#fIntencao', '#fPagou', '#fStatus', '#fIdMin', '#fIdMax'].forEach(s => $(s).addEventListener('input', renderCadastros));
+['#fBusca', '#fGenero', '#fProcura', '#fIntencao', '#fPagou', '#fStatus', '#fIdMin', '#fIdMax', '#fUf', '#fReligiao', '#fPolitica', '#fFuma'].forEach(s => $(s).addEventListener('input', renderCadastros));
 $('#fLimpar').addEventListener('click', () => { document.querySelectorAll('#tab-cadastros .filters input, #tab-cadastros .filters select').forEach(i => i.value = ''); renderCadastros(); });
 $('#recarregar').addEventListener('click', async () => { await carregarCadastros(); toast('Atualizado'); });
 document.querySelectorAll('th[data-sort]').forEach(th => th.addEventListener('click', () => {
@@ -322,7 +316,7 @@ document.querySelectorAll('th[data-sort]').forEach(th => th.addEventListener('cl
 }));
 $('#tbCad').addEventListener('click', e => { const tr = e.target.closest('tr[data-id]'); if (tr) abrir(tr.dataset.id); });
 $('#exportar').addEventListener('click', () => {
-  const cols = ['created_at','nome','email','whatsapp','idade','nascimento','cidade','genero','estado_civil','altura','filhos','personalidade','sobre','procura_genero','idade_min','idade_max','intencao','distancia','deseja','pessoa_ideal','ja_pagou','status','observacoes'];
+  const cols = ['created_at','nome','email','whatsapp','idade','nascimento','genero','cidade','uf','altura','corpo','pele','olhos','cabelo','estado_civil','filhos','quer_filhos','escolaridade','fuma','bebe','atividade','pets','religiao','religiao_importancia','politica','personalidade','interesses','sobre','procura_genero','intencao','idade_min','idade_max','distancia','pref_altura_min','pref_altura_max','pref_corpo','deseja','pref_religiao','pref_politica','pref_fuma','pref_bebe','pref_filhos','pessoa_ideal','ja_pagou','status','observacoes'];
   const cel = v => '"' + String(Array.isArray(v) ? v.join(', ') : typeof v === 'boolean' ? (v ? 'Sim' : 'Não') : v ?? '').replace(/"/g, '""') + '"';
   const csv = '﻿' + [cols.join(';'), ...filtrados().map(c => cols.map(k => cel(c[k])).join(';'))].join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
@@ -333,25 +327,30 @@ $('#exportar').addEventListener('click', () => {
 async function abrir(id) {
   const c = byId[id]; if (!c) return;
   $('#dNome').textContent = c.nome;
-  $('#dSub').textContent = `${c.idade} anos · ${c.genero} · ${c.cidade} · cadastrado em ${fmtHora(c.created_at)}`;
+  $('#dSub').textContent = `${c.idade} anos · ${c.genero} · ${c.cidade} / ${c.uf} · cadastrado em ${fmtHora(c.created_at)}`;
   const { data: pags } = await sb.from('pagamentos').select('*').eq('cadastro_id', id).order('created_at', { ascending: false });
   const pares = PARES.filter(p => p.a_id === id || p.b_id === id);
   const tags = a => a && a.length ? `<div class="tags">${a.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : '<span class="muted">–</span>';
+  const R = window.SNM_ROTULOS;
+  const val = v => Array.isArray(v) ? (v.length ? tags(v) : '<span class="muted">Tanto faz</span>') : (v === null || v === undefined || v === '' ? '<span class="muted">–</span>' : esc(v));
+  const kv = (campos, vazio) => `<div class="kv">${campos.map(k => `<div><span>${R[k] || k}</span>${val(c[k])}</div>`).join('')}</div>`;
+  const altPref = c.pref_altura_min || c.pref_altura_max ? `${c.pref_altura_min || '–'} a ${c.pref_altura_max || '–'} cm` : 'Tanto faz';
   $('#dBody').innerHTML = `
     <div class="kv">
       <div><span>E-mail</span><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div>
       <div><span>WhatsApp</span><a href="${zap(c.whatsapp)}" target="_blank" rel="noopener">${esc(c.whatsapp)}</a></div>
       <div><span>Nascimento</span>${new Date(c.nascimento + 'T12:00').toLocaleDateString('pt-BR')}</div>
-      <div><span>Estado civil</span>${esc(c.estado_civil || '–')}</div>
-      <div><span>Altura</span>${c.altura ? c.altura + ' cm' : '–'}</div>
-      <div><span>Filhos</span>${esc(c.filhos || '–')}</div>
     </div>
-    <div class="block"><h3>Como é</h3>${tags(c.personalidade)}<p style="margin-top:.5rem">${esc(c.sobre || '')}</p></div>
+    <div class="block"><h3>Aparência</h3><div class="kv"><div><span>Altura</span>${c.altura ? c.altura + ' cm' : '–'}</div>${['corpo','pele','olhos','cabelo'].map(k => `<div><span>${R[k]}</span>${val(c[k])}</div>`).join('')}</div></div>
+    <div class="block"><h3>Estilo de vida</h3>${kv(['estado_civil','filhos','quer_filhos','escolaridade','fuma','bebe','atividade','pets'])}</div>
+    <div class="block"><h3>Valores e jeito</h3>${kv(['religiao','religiao_importancia','politica'])}
+      <div class="kv" style="grid-template-columns:1fr 1fr;margin-top:.8rem"><div><span>Personalidade</span>${val(c.personalidade)}</div><div><span>Interesses</span>${val(c.interesses)}</div></div>
+      ${c.sobre ? `<p style="margin-top:.7rem">${esc(c.sobre)}</p>` : ''}</div>
     <div class="block"><h3>Quem procura</h3>
-      <div class="kv" style="margin-bottom:.6rem">
-        <div><span>Gênero</span>${esc(c.procura_genero)}</div><div><span>Idade</span>${c.idade_min} a ${c.idade_max} anos</div><div><span>Distância</span>${esc(c.distancia)}</div>
-        <div><span>Intenção</span>${esc(c.intencao || '–')}</div>
-      </div>${tags(c.deseja)}<p style="margin-top:.5rem">${esc(c.pessoa_ideal || '')}</p></div>
+      <div class="kv"><div><span>Gênero</span>${esc(c.procura_genero)}</div><div><span>Idade</span>${c.idade_min} a ${c.idade_max >= 120 ? '80+' : c.idade_max} anos</div><div><span>Distância</span>${esc(c.distancia)}</div>
+        <div><span>Intenção</span>${val(c.intencao)}</div><div><span>Altura</span>${altPref}</div><div><span>Sobre filhos</span>${val(c.pref_filhos)}</div></div>
+      <div class="kv" style="grid-template-columns:1fr 1fr;margin-top:.8rem">${['pref_corpo','deseja','pref_religiao','pref_politica','pref_fuma','pref_bebe'].map(k => `<div><span>${R[k]}</span>${val(c[k])}</div>`).join('')}</div>
+      ${c.pessoa_ideal ? `<p style="margin-top:.7rem">${esc(c.pessoa_ideal)}</p>` : ''}</div>
     <div class="block"><h3>Pares compatíveis (${pares.length})</h3>${pares.length ? `<div class="tags">${pares.map(p => { const o = byId[p.a_id === id ? p.b_id : p.a_id]; return o ? `<span style="cursor:pointer" data-open="${o.id}">${esc(o.nome)} · ${p.pontuacao}%</span>` : ''; }).join('')}</div>` : '<span class="muted">Nenhum par compatível no momento.</span>'}</div>
     <div class="block"><h3>Pagamentos ${badgePagou(c)}</h3>
       ${pags && pags.length ? `<table style="margin-bottom:.8rem"><tbody>${pags.map(p => `<tr style="cursor:default"><td>${fmtHora(p.created_at)}</td><td>R$ ${Number(p.valor).toFixed(2).replace('.', ',')}</td><td>${esc(p.metodo)}</td><td>${p.par_id && byId[p.par_id] ? 'Par: ' + esc(byId[p.par_id].nome) : ''}</td><td class="muted">${esc(p.observacao || '')}</td><td><button class="btn danger small" data-delpag="${p.id}">Remover</button></td></tr>`).join('')}</tbody></table>` : ''}
@@ -426,26 +425,57 @@ $('#minScore').addEventListener('input', () => { $('#minScoreLbl').textContent =
 $('#recarregarPares').addEventListener('click', async () => { await carregarCadastros(); await carregarPares(); toast('Atualizado'); });
 
 /* ---------- Buscar para amigo ---------- */
-document.querySelectorAll('#friendForm .chips').forEach(box => {
-  box.innerHTML = PERSONALIDADES.map(p => `<label><input type="checkbox" name="${box.dataset.name}" value="${p}"><span>${p}</span></label>`).join('');
-});
+const OP = window.SNM_OPCOES, ROT = window.SNM_ROTULOS;
+const campoAmigo = ([nome, tipo, rot, ops, req, extra]) => {
+  const o = OP[ops || nome] || [];
+  if (tipo === 'select') return `<div><label>${rot}</label><select name="${nome}" ${req ? 'required' : ''}><option value="">${req ? 'Selecione' : '—'}</option>${o.map(v => `<option>${esc(v)}</option>`).join('')}</select></div>`;
+  if (tipo === 'chips') return `<div class="full"><label>${rot}${extra ? ` <span style="text-transform:none;letter-spacing:0">(${extra})</span>` : ''}</label><div class="chips">${o.map(v => `<label><input type="checkbox" name="${nome}" value="${esc(v)}"><span>${esc(v)}</span></label>`).join('')}</div></div>`;
+  return `<div${tipo === 'full' ? ' class="full"' : ''}><label>${rot}</label><input name="${nome}" ${tipo === 'number' || nome.startsWith('idade') || nome === 'altura' ? 'type="number"' : ''} ${req ? 'required' : ''} ${extra || ''}></div>`;
+};
+$('#amigoComo').insertAdjacentHTML('beforeend', [
+  ['genero','select','Gênero',0,1], ['idade','number','Idade',0,1,'min="18" max="120"'],
+  ['cidade','text','Cidade',0,1,'placeholder="Porto Alegre"'], ['uf','select','Estado',0,1],
+  ['corpo','select','Tipo físico'], ['altura','number','Altura (cm)',0,0,'min="120" max="230"'],
+  ['fuma','select','Fuma'], ['bebe','select','Bebe'], ['filhos','select','Filhos'], ['quer_filhos','select','Quer ter filhos'],
+  ['religiao','select','Religião'], ['politica','select','Política'],
+  ['personalidade','chips','Personalidade'], ['interesses','chips','Interesses']].map(campoAmigo).join(''));
+$('#amigoProcura').insertAdjacentHTML('beforeend', [
+  ['procura_genero','select','Procura',0,1], ['intencao','select','Intenção'],
+  ['idade_min','number','Idade de',0,0,'value="25" min="18"'], ['idade_max','number','até',0,0,'value="45" min="18"'],
+  ['distancia','select','Distância'], ['pref_filhos','select','Sobre filhos'],
+  ['pref_altura_min','number','Altura de (cm)',0,0,'min="120" max="230"'], ['pref_altura_max','number','até (cm)',0,0,'min="120" max="230"'],
+  ['pref_corpo','chips','Tipo físico','corpo',0,'vazio = tanto faz'], ['deseja','chips','Personalidade desejada','personalidade'],
+  ['pref_religiao','chips','Religião aceita','religiao',0,'vazio = tanto faz'], ['pref_politica','chips','Política aceita','politica',0,'vazio = tanto faz'],
+  ['pref_fuma','chips','Sobre fumar, aceita','fuma',0,'vazio = tanto faz'], ['pref_bebe','chips','Sobre beber, aceita','bebe',0,'vazio = tanto faz']].map(campoAmigo).join(''));
+$('#amigoProcura select[name=distancia]').value = 'Mesmo estado';
+
 $('#friendForm').addEventListener('submit', async e => {
-  e.preventDefault(); const f = new FormData(e.target); const btn = e.target.querySelector('button[type=submit]');
-  let mn = +f.get('idade_min') || 18, mx = +f.get('idade_max') || 99; if (mn > mx) [mn, mx] = [mx, mn];
+  e.preventDefault(); const form = e.target, fd = new FormData(form), btn = form.querySelector('button[type=submit]');
+  const perfil = {};
+  const arrays = ['personalidade','interesses','pref_corpo','deseja','pref_religiao','pref_politica','pref_fuma','pref_bebe'];
+  const nums = ['altura','idade_min','idade_max','pref_altura_min','pref_altura_max'];
+  for (const [k, v] of fd.entries()) {
+    if (['nome','mutuo','idade'].includes(k) || arrays.includes(k) || v === '') continue;
+    perfil[k] = nums.includes(k) ? +v : v;
+  }
+  arrays.forEach(k => perfil[k] = fd.getAll(k));
+  if (perfil.uf) perfil.uf = perfil.uf.toUpperCase();
+  if (perfil.idade_min > perfil.idade_max) [perfil.idade_min, perfil.idade_max] = [perfil.idade_max, perfil.idade_min];
   btn.disabled = true;
-  const { data, error } = await sb.rpc('buscar_para_amigo', {
-    f_genero: f.get('genero'), f_idade: +f.get('idade'), f_cidade: f.get('cidade'), f_personalidade: f.getAll('personalidade'),
-    f_procura_genero: f.get('procura_genero'), f_idade_min: mn, f_idade_max: mx, f_distancia: f.get('distancia'),
-    f_deseja: f.getAll('deseja'), f_mutuo: !!f.get('mutuo')
-  });
+  const { data, error } = await sb.rpc('buscar_para_amigo', { f: perfil, f_idade: +fd.get('idade'), f_mutuo: !!fd.get('mutuo') });
   btn.disabled = false;
   if (error) { toast('Erro na busca'); console.error(error); return; }
-  const nome = f.get('nome') ? esc(f.get('nome')) : 'o amigo';
+  const nome = fd.get('nome') ? esc(fd.get('nome')) : 'o amigo';
   $('#friendResults').innerHTML = `<h3 style="font-size:1.5rem;margin-bottom:.6rem">${data.length} pessoa(s) para ${nome}</h3>` + (data.length ? `
-    <div class="table-wrap"><table><thead><tr><th>Combina</th><th>Nome</th><th>Idade</th><th>Gênero</th><th>Cidade</th><th>Intenção</th><th>Personalidade</th><th>WhatsApp</th><th>Já pagou</th></tr></thead>
-    <tbody>${data.map(r => { const c = byId[r.cadastro_id]; return c ? `<tr data-id="${c.id}"><td class="score">${r.pontuacao}%<span class="bar"><i style="width:${r.pontuacao}%"></i></span></td><td><b>${esc(c.nome)}</b></td><td>${c.idade}</td><td>${esc(c.genero)}</td><td>${esc(c.cidade)}</td><td>${esc(c.intencao || '–')}</td><td>${esc((c.personalidade || []).join(', '))}</td><td>${esc(c.whatsapp)}</td><td>${badgePagou(c)}</td></tr>` : ''; }).join('')}</tbody></table></div>`
-    : '<div class="empty">Ninguém no banco combina com esse perfil por enquanto. Tente ampliar a faixa de idade ou a distância.</div>');
+    <div class="table-wrap"><table><thead><tr><th>Combina</th><th>Nome</th><th>Idade</th><th>Gênero</th><th>Cidade</th><th>Religião</th><th>Política</th><th>Intenção</th><th>WhatsApp</th><th>Já pagou</th></tr></thead>
+    <tbody>${data.map(r => { const c = byId[r.cadastro_id]; return c ? `<tr data-id="${c.id}"><td class="score">${r.pontuacao}%<span class="bar"><i style="width:${r.pontuacao}%"></i></span></td><td><b>${esc(c.nome)}</b></td><td>${c.idade}</td><td>${esc(c.genero)}</td><td>${esc(c.cidade)} / ${esc(c.uf)}</td><td>${esc(c.religiao || '–')}</td><td>${esc(c.politica || '–')}</td><td>${esc(c.intencao || '–')}</td><td>${esc(c.whatsapp)}</td><td>${badgePagou(c)}</td></tr>` : ''; }).join('')}</tbody></table></div>`
+    : '<div class="empty">Ninguém no banco combina com esse perfil por enquanto. Tente ampliar a faixa de idade, a distância ou os itens aceitos.</div>');
   $('#friendResults').querySelectorAll('tr[data-id]').forEach(tr => tr.addEventListener('click', () => abrir(tr.dataset.id)));
+});
+
+// opções dos filtros
+document.querySelectorAll('select[data-o]').forEach(sel => {
+  sel.innerHTML = '<option value="">Todos</option>' + OP[sel.dataset.o].map(v => `<option>${esc(v)}</option>`).join('');
 });
 
 entrar();

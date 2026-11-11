@@ -20,6 +20,7 @@ index.html        Site público com o cadastro (grava no Supabase)
 admin.html        Painel admin: cadastros com filtros, pares compatíveis,
                   busca manual para amigos e registro de pagamentos
 assets/config.js  URL e chave pública do Supabase
+assets/campos.js  Opções do cadastro (usadas pelo site e pelo painel)
 assets/           Imagens das rosas e logo
 ```
 
@@ -29,7 +30,7 @@ assets/           Imagens das rosas e logo
 - `pagamentos`: pagamentos registrados por cadastro (a coluna "Já pagou" do painel vem daqui).
 - `admins`: e-mails com acesso ao painel. Para adicionar um admin, crie o usuário em
   *Authentication → Users* no Supabase e rode: `insert into admins (email) values ('email@exemplo.com');`
-- `compatibilidades()`: pares compatíveis nos dois sentidos (gênero, faixa de idade, distância) com pontuação de afinidade.
+- `compatibilidades()`: pares compatíveis nos dois sentidos. Inegociáveis: gênero, idade, distância, religião, política, cigarro e filhos. Pontuação: personalidade, interesses, tipo físico, altura, bebida, vontade de ter filhos e intenção.
 - `buscar_para_amigo(...)`: busca manual no banco para alguém que não está cadastrado.
 
 Para ver, basta abrir o `index.html` no navegador. Também funciona direto no GitHub Pages.

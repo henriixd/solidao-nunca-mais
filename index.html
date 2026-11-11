@@ -98,42 +98,91 @@
   .duo .y h3{color:var(--gold)} .duo .r h3{color:#ff7a8c}
   .duo p{font-size:.9rem}
 
-  /* Form */
+  /* Formulário em etapas */
   .signup{background:linear-gradient(180deg,var(--cream),var(--blush))}
-  .form-card{max-width:820px;margin:0 auto;background:#fff;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
-  .progress{display:flex;border-bottom:1px solid var(--line)}
-  .progress button{flex:1;padding:1.1rem .5rem;background:none;border:0;font:500 .9rem "Jost";color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:.5rem}
-  .progress button .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--blush);font-size:.8rem}
-  .progress button.active{color:var(--wine);border-color:var(--red)}
-  .progress button.active .n,.progress button.done .n{background:var(--red);color:#fff}
-  form{padding:2.4rem}
-  .pane{display:none;animation:fade .4s ease}
-  .pane.active{display:block}
-  @keyframes fade{from{opacity:0;transform:translateY(8px)}}
-  .pane h3{font-size:1.9rem;color:var(--wine);margin-bottom:.3rem}
-  .pane > p{color:var(--muted);margin-bottom:1.6rem;font-size:.95rem}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem 1.3rem}
-  .full{grid-column:1/-1}
-  label{display:block;font-size:.85rem;font-weight:500;margin-bottom:.35rem;color:var(--ink)}
-  input,select,textarea{width:100%;padding:.85rem 1rem;border:1.5px solid var(--line);border-radius:14px;font:400 1rem "Jost";background:var(--cream);color:var(--ink);transition:border .2s,box-shadow .2s}
-  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--red);box-shadow:0 0 0 4px rgba(192,21,47,.1);background:#fff}
-  textarea{min-height:100px;resize:vertical}
-  .invalid{border-color:#d33 !important}
-  .chips{display:flex;flex-wrap:wrap;gap:.5rem}
-  .chips label{margin:0;cursor:pointer}
-  .chips input{display:none}
-  .chips span{display:inline-block;padding:.5rem 1rem;border-radius:999px;border:1.5px solid var(--line);font-size:.88rem;font-weight:400;transition:all .2s;background:var(--cream)}
-  .chips input:checked + span{background:var(--red);border-color:var(--red);color:#fff}
-  .range-row{display:flex;gap:.8rem;align-items:center}
-  .range-row input{text-align:center}
-  .check{display:flex;gap:.6rem;align-items:flex-start;font-size:.88rem;font-weight:400;color:var(--muted)}
-  .check input{width:auto;margin-top:.3rem;accent-color:var(--red)}
-  .form-nav{display:flex;justify-content:space-between;margin-top:2rem;gap:1rem}
-  .success{text-align:center;padding:3rem 2rem;display:none}
-  .success img{width:120px;height:120px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--gold)}
-  .success h3{font-size:2.2rem;color:var(--wine);margin:1rem 0 .5rem}
-  .success p{color:var(--muted);max-width:460px;margin:0 auto}
-
+  .wiz{scroll-margin-top:90px;max-width:820px;margin:0 auto;background:#fff;border-radius:28px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;position:relative}
+  .wiz-top{padding:1.4rem 2rem 1rem;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#fffaf7)}
+  .wiz-track{position:relative;height:64px;margin:0 8px}
+  .wiz-line{position:absolute;left:20px;right:20px;bottom:10px;height:6px;border-radius:3px;background:var(--blush);overflow:hidden}
+  .wiz-fill{height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .8s cubic-bezier(.6,.2,.2,1)}
+  .wiz-rose{position:absolute;bottom:4px;height:60px;width:auto;transition:left .8s cubic-bezier(.6,.2,.2,1);filter:drop-shadow(0 6px 6px rgba(90,15,31,.25));transform-origin:bottom center}
+  .wiz-rose.r{left:0;transform:rotate(8deg)}
+  .wiz-rose.y{right:0;transform:rotate(-8deg)}
+  .wiz-rose.r.walk{animation:hop .8s ease}
+  @keyframes hop{30%{transform:rotate(14deg) translateY(-8px)}70%{transform:rotate(4deg)}}
+  .wiz-meta{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-top:.5rem}
+  .wiz-meta b{color:var(--wine);font-weight:600}
+  .wiz-dots{display:flex;gap:6px}
+  .wiz-dots i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:all .3s}
+  .wiz-dots i.on{background:var(--red);width:22px;border-radius:4px}
+  .wiz-dots i.done{background:var(--gold)}
+  #signup{padding:2rem 2.2rem 1.6rem}
+  .stage{min-height:360px}
+  .stage-in{animation:slideInR .5s cubic-bezier(.2,.8,.2,1) both}
+  .stage-in.back{animation-name:slideInL}
+  @keyframes slideInR{from{opacity:0;transform:translateX(50px)}}
+  @keyframes slideInL{from{opacity:0;transform:translateX(-50px)}}
+  .step-title{display:flex;align-items:center;gap:.8rem;margin-bottom:.3rem}
+  .step-title .emo{font-size:2.2rem;animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-5px) rotate(-6deg)}}
+  .step-title h3{font-size:clamp(1.7rem,4vw,2.2rem);color:var(--wine)}
+  .step-desc{color:var(--muted);margin-bottom:1.5rem;font-size:.95rem}
+  .qs{display:grid;grid-template-columns:repeat(6,1fr);gap:1.25rem 1rem}
+  .q{grid-column:span 6;animation:qIn .5s ease backwards}
+  .q.half{grid-column:span 3}.q.grow{grid-column:span 4}.q.small{grid-column:span 2}
+  @keyframes qIn{from{opacity:0;transform:translateY(12px)}}
+  .q > label,.q .ql{display:flex;justify-content:space-between;align-items:baseline;font-size:.88rem;font-weight:500;margin-bottom:.45rem;color:var(--ink)}
+  .q .hint{font-weight:400;color:var(--muted);font-size:.78rem}
+  .q.err{animation:shake .45s ease}
+  .q.err > label,.q.err .ql{color:#c62828}
+  @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+  .opts{display:flex;flex-wrap:wrap;gap:.45rem}
+  .opt{border:1.5px solid var(--line);background:var(--cream);color:var(--ink);border-radius:999px;padding:.5rem 1rem;font:400 .9rem "Jost",system-ui,sans-serif;cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .15s;user-select:none}
+  .opt:hover{border-color:var(--red-soft)}
+  .opt[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff;animation:pop .35s ease}
+  .opt.tf[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--wine)}
+  @keyframes pop{40%{transform:scale(1.12)}}
+  .opts.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem}
+  .opts.cards .opt{border-radius:16px;padding:.9rem .6rem;display:flex;flex-direction:column;align-items:center;gap:.25rem;text-align:center;font-size:.88rem;line-height:1.25}
+  .opts.cards .opt .ic{font-size:1.6rem;transition:transform .3s}
+  .opts.cards .opt[aria-pressed="true"] .ic{transform:scale(1.2) rotate(-8deg)}
+  .slider-val{font-family:"Cormorant Garamond",serif;font-size:1.5rem;color:var(--wine);font-weight:700}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--blush);padding:0;border:0;box-shadow:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--red);cursor:grab;box-shadow:0 4px 10px rgba(192,21,47,.3);pointer-events:auto}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--red);cursor:grab;pointer-events:auto}
+  .dual{position:relative;height:28px}
+  .dual input{position:absolute;inset:0;margin:auto 0;pointer-events:none;background:transparent}
+  .dual .rail{position:absolute;left:0;right:0;top:11px;height:6px;border-radius:3px;background:var(--blush)}
+  .dual .sel{position:absolute;top:11px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--gold))}
+  .q input:not([type=range]),.q select,.q textarea{width:100%;padding:.85rem 1rem;border:1.5px solid var(--line);border-radius:14px;font:400 1rem "Jost",system-ui,sans-serif;background:var(--cream);color:var(--ink);transition:border .2s,box-shadow .2s}
+  .q input:focus,.q select:focus,.q textarea:focus{outline:0;border-color:var(--red);box-shadow:0 0 0 4px rgba(192,21,47,.1);background:#fff}
+  .q textarea{min-height:90px;resize:vertical}
+  .check{display:flex;gap:.6rem;align-items:flex-start;font-size:.88rem;color:var(--muted);cursor:pointer}
+  .check input{width:auto !important;margin-top:.25rem;accent-color:var(--red)}
+  .wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;gap:1rem}
+  .wiz-nav .btn[disabled]{opacity:.6;cursor:wait}
+  .cheer{font-size:.85rem;color:var(--red);font-style:italic;opacity:0;transition:opacity .4s}
+  .cheer.on{opacity:1}
+  .fly{position:fixed;pointer-events:none;z-index:200;font-size:16px;animation:fly 1s ease-out forwards}
+  @keyframes fly{to{transform:translate(var(--x),-70px) scale(.6) rotate(var(--r));opacity:0}}
+  .success{text-align:center;padding:3rem 2rem 3.4rem;display:none}
+  .success .meet{position:relative;height:170px;width:220px;margin:0 auto}
+  .success .meet img{position:absolute;bottom:0;height:160px}
+  .success .meet .r{left:30px;transform-origin:75% 100%;animation:meetR 1.2s cubic-bezier(.2,.8,.2,1) both}
+  .success .meet .y{right:0;height:150px;transform-origin:40% 100%;animation:meetY 1.2s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes meetR{from{transform:translateX(-120px) rotate(-30deg);opacity:0}to{transform:rotate(-10deg)}}
+  @keyframes meetY{from{transform:translateX(120px) rotate(30deg);opacity:0}to{transform:rotate(9deg)}}
+  .success h3{font-size:2.3rem;color:var(--wine);margin:1rem 0 .5rem}
+  .success p{color:var(--muted);max-width:470px;margin:0 auto}
+  .burst{position:absolute;pointer-events:none;border-radius:70% 0 70% 0;width:12px;height:16px;animation:burst 1.6s ease-out forwards}
+  @keyframes burst{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+  @media (max-width:600px){
+    #signup{padding:1.5rem 1.2rem}
+    .wiz-top{padding:1.1rem 1.2rem .8rem}
+    .q.half,.q.grow{grid-column:span 6}.q.small{grid-column:span 6}
+    .opts.cards{grid-template-columns:repeat(2,1fr)}
+    .stage{min-height:0}
+  }
   /* Pricing */
   .price-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:1.6rem;max-width:920px;margin:0 auto}
   .price{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:2.4rem 2rem}
@@ -326,101 +375,32 @@
     <div class="section-head reveal">
       <span class="eyebrow">Cadastro gratuito</span>
       <h2>Comece sua história</h2>
-      <p>Leva poucos minutos. Quanto mais sincero, melhor o cruzamento de dados.</p>
+      <p>São 6 etapas rápidas, quase tudo com um toque. Quanto mais sincero, melhor o cruzamento de dados.</p>
     </div>
 
-    <div class="form-card reveal">
-      <div class="progress" role="tablist">
-        <button type="button" class="active" data-go="0"><span class="n">1</span><span class="t">Seus dados</span></button>
-        <button type="button" data-go="1"><span class="n">2</span><span class="t">Como você é</span></button>
-        <button type="button" data-go="2"><span class="n">3</span><span class="t">Quem procura</span></button>
+    <div class="wiz reveal" id="wiz">
+      <div class="wiz-top" id="wizTop">
+        <div class="wiz-track" aria-hidden="true">
+          <div class="wiz-line"><div class="wiz-fill" id="wizFill"></div></div>
+          <img class="wiz-rose y" src="assets/rosa-amarela.png" alt="">
+          <img class="wiz-rose r" id="wizRose" src="assets/rosa-vermelha.png" alt="">
+        </div>
+        <div class="wiz-meta"><span>Etapa <b id="wizNum">1</b> de <b id="wizTot">6</b></span><span class="wiz-dots" id="wizDots"></span></div>
       </div>
 
       <form id="signup" novalidate>
-        <!-- Etapa 1 -->
-        <div class="pane active">
-          <h3>Seus dados</h3>
-          <p>Usamos só para avisar quando encontrarmos alguém compatível. Nunca mostramos seu contato sem o pagamento de ambos.</p>
-          <div class="grid">
-            <div class="full"><label for="nome">Nome completo</label><input id="nome" name="nome" required autocomplete="name"></div>
-            <div><label for="email">E-mail</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-            <div><label for="whats">WhatsApp</label><input id="whats" name="whatsapp" type="tel" required placeholder="(51) 99999-9999" autocomplete="tel"></div>
-            <div><label for="nasc">Data de nascimento</label><input id="nasc" name="nascimento" type="date" required></div>
-            <div><label for="cidade">Cidade / Estado</label><input id="cidade" name="cidade" required placeholder="Porto Alegre / RS"></div>
-          </div>
-        </div>
-
-        <!-- Etapa 2 -->
-        <div class="pane">
-          <h3>Como você é</h3>
-          <p>Conte um pouco sobre você.</p>
-          <div class="grid">
-            <div><label for="genero">Eu sou</label>
-              <select id="genero" name="genero" required><option value="">Selecione</option><option>Homem</option><option>Mulher</option><option>Prefiro não dizer</option></select></div>
-            <div><label for="estado">Estado civil</label>
-              <select id="estado" name="estado_civil" required><option value="">Selecione</option><option>Solteiro(a)</option><option>Divorciado(a)</option><option>Viúvo(a)</option><option>Separado(a)</option></select></div>
-            <div><label for="altura">Altura (cm)</label><input id="altura" name="altura" type="number" min="120" max="230" placeholder="170"></div>
-            <div><label for="filhos">Tem filhos?</label>
-              <select id="filhos" name="filhos"><option value="">Selecione</option><option>Não</option><option>Sim, moram comigo</option><option>Sim, não moram comigo</option></select></div>
-            <div class="full"><label>Minha personalidade</label>
-              <div class="chips">
-                <label><input type="checkbox" name="personalidade" value="Romântico(a)"><span>Romântico(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Caseiro(a)"><span>Caseiro(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Aventureiro(a)"><span>Aventureiro(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Extrovertido(a)"><span>Extrovertido(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Tímido(a)"><span>Tímido(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Religioso(a)"><span>Religioso(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Esportista"><span>Esportista</span></label>
-                <label><input type="checkbox" name="personalidade" value="Bem-humorado(a)"><span>Bem-humorado(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Trabalhador(a)"><span>Trabalhador(a)</span></label>
-                <label><input type="checkbox" name="personalidade" value="Família em primeiro lugar"><span>Família em 1º lugar</span></label>
-              </div></div>
-            <div class="full"><label for="sobre">Fale sobre você</label><textarea id="sobre" name="sobre" required placeholder="O que você gosta de fazer, seus sonhos, o que te faz feliz..."></textarea></div>
-          </div>
-        </div>
-
-        <!-- Etapa 3 -->
-        <div class="pane">
-          <h3>Quem você procura</h3>
-          <p>Descreva a pessoa que gostaria de conhecer.</p>
-          <div class="grid">
-            <div><label for="busca">Procuro</label>
-              <select id="busca" name="procura_genero" required><option value="">Selecione</option><option>Homem</option><option>Mulher</option><option>Tanto faz</option></select></div>
-            <div><label>Idade entre</label>
-              <div class="range-row"><input name="idade_min" type="number" min="18" max="99" value="25" aria-label="Idade mínima"><span>e</span><input name="idade_max" type="number" min="18" max="99" value="45" aria-label="Idade máxima"></div></div>
-            <div><label for="intencao">Busco um relacionamento</label>
-              <select id="intencao" name="intencao" required><option value="">Selecione</option><option>Sério / namoro</option><option>Casamento</option><option>Amizade que pode virar algo mais</option></select></div>
-            <div><label for="distancia">Distância</label>
-              <select id="distancia" name="distancia"><option>Mesma cidade</option><option>Mesmo estado</option><option>Qualquer lugar do Brasil</option></select></div>
-            <div class="full"><label>A pessoa ideal é</label>
-              <div class="chips">
-                <label><input type="checkbox" name="deseja" value="Romântico(a)"><span>Romântico(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Caseiro(a)"><span>Caseiro(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Aventureiro(a)"><span>Aventureiro(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Extrovertido(a)"><span>Extrovertido(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Tímido(a)"><span>Tímido(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Religioso(a)"><span>Religioso(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Esportista"><span>Esportista</span></label>
-                <label><input type="checkbox" name="deseja" value="Bem-humorado(a)"><span>Bem-humorado(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Trabalhador(a)"><span>Trabalhador(a)</span></label>
-                <label><input type="checkbox" name="deseja" value="Família em primeiro lugar"><span>Família em 1º lugar</span></label>
-              </div></div>
-            <div class="full"><label for="ideal">Descreva a pessoa dos seus sonhos</label><textarea id="ideal" name="pessoa_ideal" required placeholder="Como ela é, o que vocês fariam juntos..."></textarea></div>
-            <div class="full"><label class="check"><input type="checkbox" name="maior18" required> Declaro que tenho 18 anos ou mais e que as informações são verdadeiras.</label></div>
-            <div class="full"><label class="check"><input type="checkbox" name="lgpd" required> Autorizo o uso dos meus dados para encontrar perfis compatíveis, conforme a LGPD.</label></div>
-          </div>
-        </div>
-
-        <div class="form-nav">
+        <div class="stage" id="stage"></div>
+        <div class="wiz-nav">
           <button type="button" class="btn btn-ghost" id="prev" style="visibility:hidden">← Voltar</button>
+          <span class="cheer" id="cheer"></span>
           <button type="button" class="btn btn-primary" id="next">Continuar →</button>
         </div>
       </form>
 
       <div class="success" id="success">
-        <img src="assets/logo-rosas.png" alt="">
+        <div class="meet"><img class="r" src="assets/rosa-vermelha.png" alt=""><img class="y" src="assets/rosa-amarela.png" alt=""></div>
         <h3>Cadastro recebido!</h3>
-        <p>Agora é com a gente. Assim que encontrarmos alguém compatível com você, avisaremos pelo WhatsApp e e-mail. Fique de olho ♥</p>
+        <p>Agora é com a gente. Assim que o cruzamento de dados encontrar alguém compatível com você, avisaremos pelo WhatsApp e pelo e-mail. Fique de olho ♥</p>
       </div>
     </div>
   </div>
@@ -507,6 +487,7 @@
 </footer>
 
 <script src="assets/config.js"></script>
+<script src="assets/campos.js"></script>
 <script>
   document.getElementById('ano').textContent = new Date().getFullYear();
 
@@ -532,74 +513,250 @@
     hero.appendChild(p);
   }
 
-  // Formulário em etapas
-  const form = document.getElementById('signup');
-  const panes = [...form.querySelectorAll('.pane')];
-  const tabs = [...document.querySelectorAll('.progress button')];
+  // ---------- Formulário em etapas ----------
+  const O = window.SNM_OPCOES;
+  const STEPS = [
+    { e: '🌹', t: 'Vamos começar', d: 'Seus dados ficam em sigilo. Só usamos para avisar quando houver alguém compatível.', q: [
+      { id: 'nome', l: 'Seu nome', type: 'text', req: 1, ph: 'Como você se chama?', ac: 'name' },
+      { id: 'genero', l: 'Você é', type: 'cards', o: 'genero', req: 1 },
+      { id: 'nascimento', l: 'Data de nascimento', type: 'date', req: 1, w: 'half' },
+      { id: 'whatsapp', l: 'WhatsApp', type: 'tel', req: 1, ph: '(51) 99999-9999', w: 'half', ac: 'tel' },
+      { id: 'email', l: 'E-mail', type: 'email', req: 1, ph: 'voce@email.com', ac: 'email' },
+      { id: 'cidade', l: 'Cidade', type: 'text', req: 1, ph: 'Porto Alegre', w: 'grow', ac: 'address-level2' },
+      { id: 'uf', l: 'Estado', type: 'select', o: 'uf', req: 1, w: 'small' } ] },
+    { e: '🪞', t: 'Como você é', d: 'Toque nas opções que mais combinam com você.', q: [
+      { id: 'altura', l: 'Sua altura', type: 'slider', min: 140, max: 210, def: 168, unit: ' cm' },
+      { id: 'corpo', l: 'Tipo físico', type: 'single', o: 'corpo', req: 1 },
+      { id: 'pele', l: 'Cor da pele', type: 'single', o: 'pele' },
+      { id: 'olhos', l: 'Olhos', type: 'single', o: 'olhos' },
+      { id: 'cabelo', l: 'Cabelo', type: 'single', o: 'cabelo' } ] },
+    { e: '☕', t: 'Seu estilo de vida', d: 'Como é o seu dia a dia?', q: [
+      { id: 'estado_civil', l: 'Estado civil', type: 'single', o: 'estado_civil', req: 1 },
+      { id: 'filhos', l: 'Filhos', type: 'single', o: 'filhos', req: 1 },
+      { id: 'quer_filhos', l: 'Quer ter (mais) filhos?', type: 'cards', o: 'quer_filhos' },
+      { id: 'fuma', l: 'Você fuma?', type: 'cards', o: 'fuma', req: 1 },
+      { id: 'bebe', l: 'Você bebe?', type: 'cards', o: 'bebe', req: 1 },
+      { id: 'escolaridade', l: 'Escolaridade', type: 'single', o: 'escolaridade' },
+      { id: 'atividade', l: 'Atividade física', type: 'single', o: 'atividade' },
+      { id: 'pets', l: 'Animais de estimação', type: 'single', o: 'pets' } ] },
+    { e: '✨', t: 'Seus valores e seu jeito', d: 'É aqui que o cruzamento de dados mais aprende sobre você.', q: [
+      { id: 'religiao', l: 'Religião', type: 'single', o: 'religiao', req: 1 },
+      { id: 'religiao_importancia', l: 'A fé na sua vida é…', type: 'single', o: 'religiao_importancia' },
+      { id: 'politica', l: 'Posição política', type: 'single', o: 'politica', req: 1 },
+      { id: 'personalidade', l: 'Sua personalidade', hint: 'escolha até 5', type: 'multi', o: 'personalidade', max: 5, req: 1 },
+      { id: 'interesses', l: 'O que você gosta de fazer', hint: 'escolha até 6', type: 'multi', o: 'interesses', max: 6 } ] },
+    { e: '💘', t: 'Quem você procura', d: 'Agora conte como é a pessoa que você quer encontrar.', q: [
+      { id: 'procura_genero', l: 'Procuro', type: 'cards', o: 'procura_genero', req: 1 },
+      { id: 'intencao', l: 'Para um relacionamento', type: 'cards', o: 'intencao', req: 1 },
+      { id: 'idade', l: 'Com idade entre', type: 'dual', min: 18, max: 80, def: [25, 45], unit: ' anos' },
+      { id: 'distancia', l: 'Morando', type: 'cards', o: 'distancia', def: 'Mesmo estado' },
+      { id: 'pref_altura', l: 'Altura', type: 'dual', min: 140, max: 210, def: [140, 210], unit: ' cm', any: 1 },
+      { id: 'pref_corpo', l: 'Tipo físico', type: 'multi', o: 'corpo', tf: 1 },
+      { id: 'deseja', l: 'Que seja', hint: 'escolha até 5', type: 'multi', o: 'personalidade', max: 5 } ] },
+    { e: '💎', t: 'O que não pode faltar', d: 'Marque o que você aceita. Se não fizer diferença, deixe em "Tanto faz".', q: [
+      { id: 'pref_religiao', l: 'Religião da pessoa', type: 'multi', o: 'religiao', tf: 1 },
+      { id: 'pref_politica', l: 'Posição política da pessoa', type: 'multi', o: 'politica', tf: 1 },
+      { id: 'pref_fuma', l: 'Sobre fumar, aceito quem', type: 'multi', o: 'fuma', tf: 1 },
+      { id: 'pref_bebe', l: 'Sobre beber, aceito quem', type: 'multi', o: 'bebe', tf: 1 },
+      { id: 'pref_filhos', l: 'Sobre filhos', type: 'single', o: 'pref_filhos', def: 'Aceito quem tem filhos' },
+      { id: 'sobre', l: 'Conte algo sobre você', hint: 'opcional', type: 'textarea', ph: 'O que te faz feliz, seus sonhos, um programa perfeito…' },
+      { id: 'pessoa_ideal', l: 'Descreva a pessoa dos seus sonhos', hint: 'opcional', type: 'textarea', ph: 'Como ela é, o que vocês fariam juntos…' },
+      { id: 'maior18', type: 'check', req: 1, l: 'Declaro que tenho 18 anos ou mais e que as informações são verdadeiras.' },
+      { id: 'lgpd', type: 'check', req: 1, l: 'Autorizo o uso dos meus dados para encontrar pessoas compatíveis, conforme a LGPD.' } ] }
+  ];
+  const CHEERS = ['Ótimo começo! 💛', 'Está ficando lindo! 🌹', 'Metade do caminho! ✨', 'Falta pouco! 💘', 'Última etapa! 💎'];
+  const V = {}; // respostas
+  const form = document.getElementById('signup'), stage = document.getElementById('stage');
   const prev = document.getElementById('prev'), next = document.getElementById('next');
+  const escH = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   let step = 0;
+  document.getElementById('wizTot').textContent = STEPS.length;
+  document.getElementById('wizDots').innerHTML = STEPS.map(() => '<i></i>').join('');
 
-  function valid(i) {
-    let ok = true;
-    panes[i].querySelectorAll('[required]').forEach(f => {
-      const bad = f.type === 'checkbox' ? !f.checked : !f.value.trim() || (f.type === 'email' && !f.checkValidity());
-      f.classList.toggle('invalid', bad);
-      if (f.type === 'checkbox') f.parentElement.style.color = bad ? '#d33' : '';
-      if (bad) ok = false;
-    });
-    if (i === 0 && ok) {
-      const n = new Date(form.nascimento.value), hoje = new Date();
-      const idade = hoje.getFullYear() - n.getFullYear() - (hoje < new Date(hoje.getFullYear(), n.getMonth(), n.getDate()) ? 1 : 0);
-      if (idade < 18) { form.nascimento.classList.add('invalid'); alert('O cadastro é permitido apenas para maiores de 18 anos.'); ok = false; }
+  // valores iniciais
+  STEPS.forEach(s => s.q.forEach(q => {
+    if (q.type === 'multi') V[q.id] = [];
+    else if (q.type === 'slider') V[q.id] = q.def;
+    else if (q.type === 'dual') V[q.id] = [...q.def];
+    else if (q.def) V[q.id] = q.def;
+  }));
+
+  function optBtn(q, val, i, multi) {
+    const on = multi ? V[q.id].includes(val) : V[q.id] === val;
+    const ic = q.type === 'cards' && O.icones[val] ? `<span class="ic">${O.icones[val]}</span>` : '';
+    return `<button type="button" class="opt" data-q="${q.id}" data-v="${escH(val)}" aria-pressed="${on}">${ic}${escH(val)}</button>`;
+  }
+  function renderQ(q, i) {
+    const w = q.w ? ' ' + q.w : '', d = `style="animation-delay:${i * 60}ms"`;
+    const lab = `<span class="ql"><span>${q.l}${q.req && q.type !== 'check' ? '' : ''}</span>${q.hint ? `<span class="hint">${q.hint}</span>` : ''}</span>`;
+    switch (q.type) {
+      case 'text': case 'email': case 'tel': case 'date':
+        return `<div class="q${w}" data-id="${q.id}" ${d}><label for="f_${q.id}">${q.l}</label><input id="f_${q.id}" type="${q.type}" ${q.ph ? `placeholder="${q.ph}"` : ''} ${q.ac ? `autocomplete="${q.ac}"` : ''} value="${escH(V[q.id] || '')}" ${q.type === 'date' ? `max="${new Date().toISOString().slice(0, 10)}"` : ''}></div>`;
+      case 'select':
+        return `<div class="q${w}" data-id="${q.id}" ${d}><label for="f_${q.id}">${q.l}</label><select id="f_${q.id}"><option value="">UF</option>${O[q.o].map(v => `<option${V[q.id] === v ? ' selected' : ''}>${v}</option>`).join('')}</select></div>`;
+      case 'textarea':
+        return `<div class="q" data-id="${q.id}" ${d}>${lab.replace('span class="ql"', 'label class="ql" for="f_' + q.id + '"').replace(/<\/span>$/, '</label>')}<textarea id="f_${q.id}" placeholder="${q.ph}" maxlength="2000">${escH(V[q.id] || '')}</textarea></div>`;
+      case 'single': case 'cards':
+        return `<div class="q" data-id="${q.id}" ${d}>${lab}<div class="opts${q.type === 'cards' ? ' cards' : ''}" role="radiogroup">${O[q.o].map((v, k) => optBtn(q, v, k)).join('')}</div></div>`;
+      case 'multi':
+        return `<div class="q" data-id="${q.id}" ${d}>${lab}<div class="opts">${q.tf ? `<button type="button" class="opt tf" data-q="${q.id}" data-v="" aria-pressed="${!V[q.id].length}">💞 Tanto faz</button>` : ''}${O[q.o].map((v, k) => optBtn(q, v, k, 1)).join('')}</div></div>`;
+      case 'slider':
+        return `<div class="q" data-id="${q.id}" ${d}><span class="ql"><span>${q.l}</span><span class="slider-val" id="sv_${q.id}"></span></span><input type="range" id="f_${q.id}" min="${q.min}" max="${q.max}" value="${V[q.id]}"></div>`;
+      case 'dual':
+        return `<div class="q" data-id="${q.id}" ${d}><span class="ql"><span>${q.l}</span><span class="slider-val" id="sv_${q.id}"></span></span><div class="dual"><div class="rail"></div><div class="sel" id="sel_${q.id}"></div><input type="range" data-dual="${q.id}" data-k="0" min="${q.min}" max="${q.max}" value="${V[q.id][0]}" aria-label="${q.l} mínimo"><input type="range" data-dual="${q.id}" data-k="1" min="${q.min}" max="${q.max}" value="${V[q.id][1]}" aria-label="${q.l} máximo"></div></div>`;
+      case 'check':
+        return `<div class="q" data-id="${q.id}" ${d}><label class="check"><input type="checkbox" id="f_${q.id}" ${V[q.id] ? 'checked' : ''}> ${q.l}</label></div>`;
     }
-    return ok;
   }
-  function show(i) {
-    step = i;
-    panes.forEach((p, k) => p.classList.toggle('active', k === i));
-    tabs.forEach((t, k) => { t.classList.toggle('active', k === i); t.classList.toggle('done', k < i); });
-    prev.style.visibility = i ? 'visible' : 'hidden';
-    next.textContent = i === panes.length - 1 ? 'Enviar cadastro ♥' : 'Continuar →';
+  const qById = id => STEPS.flatMap(s => s.q).find(q => q.id === id);
+  function updSlider(id) {
+    const q = qById(id), el = document.getElementById('sv_' + id); if (!el) return;
+    if (q.type === 'slider') { el.textContent = V[id] + q.unit; return; }
+    const [a, b] = V[id], sel = document.getElementById('sel_' + id), span = q.max - q.min;
+    sel.style.left = ((a - q.min) / span * 100) + '%'; sel.style.width = ((b - a) / span * 100) + '%';
+    el.textContent = q.any && a === q.min && b === q.max ? 'Tanto faz' : `${a} a ${b}${b === q.max && q.id === 'idade' ? '+' : ''}${q.unit}`;
   }
+  const primeiroNome = () => (V.nome || '').trim().split(/\s+/)[0];
+  function render(dir) {
+    const s = STEPS[step];
+    let t = s.t;
+    if (step === 1 && primeiroNome()) t = `Prazer, ${escH(primeiroNome())}! Como você é?`;
+    stage.innerHTML = `<div class="stage-in${dir < 0 ? ' back' : ''}"><div class="step-title"><span class="emo">${s.e}</span><h3>${t}</h3></div><p class="step-desc">${s.d}</p><div class="qs">${s.q.map(renderQ).join('')}</div></div>`;
+    s.q.forEach(q => (q.type === 'slider' || q.type === 'dual') && updSlider(q.id));
+    const pct = step / (STEPS.length - 1);
+    document.getElementById('wizFill').style.width = (pct * 100) + '%';
+    const rose = document.getElementById('wizRose');
+    rose.style.left = `calc(${pct} * (100% - 110px))`;
+    rose.classList.remove('walk'); void rose.offsetWidth; rose.classList.add('walk');
+    document.getElementById('wizNum').textContent = step + 1;
+    document.querySelectorAll('#wizDots i').forEach((d, k) => { d.className = k === step ? 'on' : k < step ? 'done' : ''; });
+    prev.style.visibility = step ? 'visible' : 'hidden';
+    next.textContent = step === STEPS.length - 1 ? 'Enviar cadastro ♥' : 'Continuar →';
+    const ch = document.getElementById('cheer'); ch.classList.remove('on');
+    if (step && CHEERS[step - 1]) { ch.textContent = CHEERS[step - 1]; setTimeout(() => ch.classList.add('on'), 300); }
+  }
+
+  function hearts(x, y, n = 5) {
+    const em = ['💗', '💛', '❤️', '🌹'];
+    for (let i = 0; i < n; i++) {
+      const h = document.createElement('span'); h.className = 'fly'; h.textContent = em[i % em.length];
+      h.style.left = (x - 8) + 'px'; h.style.top = (y - 10) + 'px';
+      h.style.setProperty('--x', (Math.random() * 80 - 40) + 'px'); h.style.setProperty('--r', (Math.random() * 60 - 30) + 'deg');
+      h.style.animationDelay = (i * 40) + 'ms';
+      document.body.appendChild(h); setTimeout(() => h.remove(), 1300);
+    }
+  }
+
+  // cliques nas opções
+  stage.addEventListener('click', e => {
+    const b = e.target.closest('.opt'); if (!b) return;
+    const q = qById(b.dataset.q), v = b.dataset.v, box = b.parentElement;
+    if (q.type === 'multi') {
+      if (v === '') V[q.id] = [];
+      else if (V[q.id].includes(v)) V[q.id] = V[q.id].filter(x => x !== v);
+      else {
+        if (q.max && V[q.id].length >= q.max) { const el = b.closest('.q'); el.classList.remove('err'); void el.offsetWidth; el.classList.add('err'); return; }
+        V[q.id] = [...V[q.id], v];
+      }
+      box.querySelectorAll('.opt').forEach(o => o.setAttribute('aria-pressed', o.dataset.v === '' ? !V[q.id].length : V[q.id].includes(o.dataset.v)));
+    } else {
+      V[q.id] = v;
+      box.querySelectorAll('.opt').forEach(o => o.setAttribute('aria-pressed', o === b));
+    }
+    b.closest('.q').classList.remove('err');
+    if (b.getAttribute('aria-pressed') === 'true') { const r = b.getBoundingClientRect(); hearts(r.left + r.width / 2, r.top, 4); }
+  });
+  stage.addEventListener('input', e => {
+    const t = e.target;
+    if (t.dataset.dual) {
+      const id = t.dataset.dual, k = +t.dataset.k, val = +t.value;
+      if (k === 0) V[id][0] = Math.min(val, V[id][1]); else V[id][1] = Math.max(val, V[id][0]);
+      t.value = V[id][k]; updSlider(id); return;
+    }
+    const id = t.id && t.id.replace('f_', ''); if (!id) return;
+    const q = qById(id);
+    V[id] = q.type === 'check' ? t.checked : q.type === 'slider' ? +t.value : t.value;
+    if (q.type === 'slider') updSlider(id);
+    t.closest('.q').classList.remove('err');
+  });
+  stage.addEventListener('change', e => { if (e.target.type === 'checkbox') { const id = e.target.id.replace('f_', ''); V[id] = e.target.checked; e.target.closest('.q').classList.remove('err'); } });
+
+  function idade(d) { const n = new Date(d), h = new Date(); return h.getFullYear() - n.getFullYear() - (h < new Date(h.getFullYear(), n.getMonth(), n.getDate()) ? 1 : 0); }
+  function validar() {
+    let primeiro = null;
+    STEPS[step].q.forEach(q => {
+      const v = V[q.id];
+      let ruim = q.req && (q.type === 'multi' ? !v.length : q.type === 'check' ? !v : !String(v || '').trim());
+      if (!ruim && q.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) ruim = true;
+      if (!ruim && q.type === 'tel' && String(v).replace(/\D/g, '').length < 10) ruim = true;
+      if (!ruim && q.type === 'date' && idade(v) < 18) { ruim = true; alert('O cadastro é permitido apenas para maiores de 18 anos.'); }
+      const el = stage.querySelector(`.q[data-id="${q.id}"]`);
+      el.classList.remove('err');
+      if (ruim) { void el.offsetWidth; el.classList.add('err'); primeiro = primeiro || el; }
+    });
+    if (primeiro) primeiro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return !primeiro;
+  }
+  function irPara(i) {
+    const dir = i > step ? 1 : -1; step = i; render(dir);
+    document.getElementById('wiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   next.addEventListener('click', async () => {
-    if (!valid(step)) return;
-    if (step < panes.length - 1) return show(step + 1);
-    const fd = new FormData(form);
-    const num = v => (v === null || v === '' ? null : parseInt(v, 10));
+    if (!validar()) return;
+    const r = next.getBoundingClientRect(); hearts(r.left + r.width / 2, r.top, 6);
+    if (step < STEPS.length - 1) return irPara(step + 1);
+    const arr = k => V[k] || [], s = k => (V[k] ? String(V[k]).trim() : null) || null;
+    const semLimite = (k, q) => V[k][0] === qById(k).min && V[k][1] === qById(k).max;
     const dados = {
-      nome: fd.get('nome').trim(), email: fd.get('email').trim(), whatsapp: fd.get('whatsapp').trim(),
-      nascimento: fd.get('nascimento'), cidade: fd.get('cidade').trim(),
-      genero: fd.get('genero'), estado_civil: fd.get('estado_civil') || null,
-      altura: num(fd.get('altura')), filhos: fd.get('filhos') || null,
-      personalidade: fd.getAll('personalidade'), sobre: fd.get('sobre').trim(),
-      procura_genero: fd.get('procura_genero'),
-      idade_min: num(fd.get('idade_min')) ?? 18, idade_max: num(fd.get('idade_max')) ?? 99,
-      intencao: fd.get('intencao') || null, distancia: fd.get('distancia'),
-      deseja: fd.getAll('deseja'), pessoa_ideal: fd.get('pessoa_ideal').trim()
+      nome: s('nome'), email: s('email'), whatsapp: s('whatsapp'), nascimento: V.nascimento, genero: V.genero,
+      cidade: s('cidade'), uf: V.uf, altura: V.altura, corpo: s('corpo'), pele: s('pele'), olhos: s('olhos'), cabelo: s('cabelo'),
+      estado_civil: s('estado_civil'), filhos: s('filhos'), quer_filhos: s('quer_filhos'), escolaridade: s('escolaridade'),
+      fuma: s('fuma'), bebe: s('bebe'), atividade: s('atividade'), pets: s('pets'),
+      religiao: s('religiao'), religiao_importancia: s('religiao_importancia'), politica: s('politica'),
+      personalidade: arr('personalidade'), interesses: arr('interesses'),
+      procura_genero: V.procura_genero, intencao: s('intencao'), idade_min: V.idade[0], idade_max: V.idade[1] === 80 ? 120 : V.idade[1],
+      distancia: V.distancia, pref_altura_min: semLimite('pref_altura') ? null : V.pref_altura[0], pref_altura_max: semLimite('pref_altura') ? null : V.pref_altura[1],
+      pref_corpo: arr('pref_corpo'), deseja: arr('deseja'), pref_religiao: arr('pref_religiao'), pref_politica: arr('pref_politica'),
+      pref_fuma: arr('pref_fuma'), pref_bebe: arr('pref_bebe'), pref_filhos: s('pref_filhos'), sobre: s('sobre'), pessoa_ideal: s('pessoa_ideal')
     };
-    if (dados.idade_min > dados.idade_max) [dados.idade_min, dados.idade_max] = [dados.idade_max, dados.idade_min];
     next.disabled = true; next.textContent = 'Enviando…';
     try {
       const { supabaseUrl, supabaseKey } = window.SNM_CONFIG;
-      const r = await fetch(supabaseUrl + '/rest/v1/cadastros', {
-        method: 'POST',
-        headers: { apikey: supabaseKey, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-        body: JSON.stringify(dados)
+      const resp = await fetch(supabaseUrl + '/rest/v1/cadastros', {
+        method: 'POST', headers: { apikey: supabaseKey, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(dados)
       });
-      if (!r.ok) throw new Error(await r.text());
-    } catch (e) {
-      console.error(e);
+      if (!resp.ok) throw new Error(await resp.text());
+    } catch (err) {
+      console.error(err);
       alert('Não foi possível enviar seu cadastro agora. Verifique sua conexão e tente novamente.');
-      next.disabled = false; next.textContent = 'Enviar cadastro ♥';
-      return;
+      next.disabled = false; next.textContent = 'Enviar cadastro ♥'; return;
     }
-    form.style.display = 'none';
-    document.querySelector('.progress').style.display = 'none';
-    document.getElementById('success').style.display = 'block';
+    sucesso();
   });
-  prev.addEventListener('click', () => show(step - 1));
-  tabs.forEach((t, k) => t.addEventListener('click', () => { if (k <= step || [...Array(k).keys()].every(valid)) show(k); }));
-  form.addEventListener('input', e => e.target.classList.remove('invalid'));
+  prev.addEventListener('click', () => irPara(step - 1));
+
+  function sucesso() {
+    document.getElementById('wizFill').style.width = '100%';
+    document.getElementById('wizRose').style.left = 'calc(100% - 110px)';
+    setTimeout(() => {
+      form.style.display = 'none'; document.getElementById('wizTop').style.display = 'none';
+      const ok = document.getElementById('success'); ok.style.display = 'block';
+      if (primeiroNome()) ok.querySelector('h3').textContent = `Cadastro recebido, ${primeiroNome()}!`;
+      const wiz = document.getElementById('wiz');
+      for (let i = 0; i < 40; i++) {
+        const p = document.createElement('span'); p.className = 'burst';
+        p.style.left = '50%'; p.style.top = '110px';
+        p.style.background = i % 2 ? '#C0152F' : '#F2B823';
+        const a = Math.random() * Math.PI * 2, d = 120 + Math.random() * 220;
+        p.style.setProperty('--x', Math.cos(a) * d + 'px'); p.style.setProperty('--y', Math.sin(a) * d * .7 + 'px');
+        p.style.setProperty('--r', Math.random() * 720 + 'deg'); p.style.animationDelay = (Math.random() * 300 + 500) + 'ms';
+        wiz.appendChild(p); setTimeout(() => p.remove(), 2600);
+      }
+      wiz.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 700);
+  }
+  render(1);
 </script>
 </body>
 </html>
