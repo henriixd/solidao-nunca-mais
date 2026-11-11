@@ -56,10 +56,14 @@
   .hero-art{position:relative;aspect-ratio:1;max-width:460px;margin-inline:auto;width:100%}
   .hero-art .halo{position:absolute;inset:6%;border-radius:50%;background:radial-gradient(circle,#fff 0%,var(--blush) 55%,transparent 72%)}
   .hero-art .ring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(192,21,47,.3);animation:spin 60s linear infinite}
-  .hero-art img.roses{position:absolute;inset:11%;width:78%;height:78%;object-fit:cover;border-radius:32px;border:6px solid #fff;box-shadow:0 30px 60px -20px rgba(90,15,31,.55);animation:sway 6s ease-in-out infinite}
+  .hero-art .rose{position:absolute;bottom:3%;height:auto;filter:drop-shadow(0 18px 22px rgba(90,15,31,.28));will-change:transform}
+  .hero-art .rose.red{width:46%;left:var(--rl,21.5%);transform-origin:75% 100%;animation:swayR 7s ease-in-out infinite;z-index:1}
+  .hero-art .rose.yellow{width:74%;left:var(--yl,14.4%);transform-origin:40% 100%;animation:swayY 7s ease-in-out infinite;z-index:0}
+  @keyframes swayR{0%,100%{transform:rotate(-11deg)}50%{transform:rotate(-7deg)}}
+  @keyframes swayY{0%,100%{transform:rotate(8deg)}50%{transform:rotate(12deg)}}
   .legend{position:absolute;background:#fff;border-radius:14px;padding:.6rem .95rem;box-shadow:var(--shadow);font-size:.82rem;display:flex;align-items:center;gap:.5rem}
   .legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
-  .legend.l1{left:-4%;top:16%;z-index:2}.legend.l2{right:-6%;top:40%;z-index:2}
+  .legend.l1{left:-4%;top:12%;z-index:2}.legend.l2{right:-4%;top:76%;z-index:2}
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes sway{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-10px)}}
   .petal{position:absolute;top:-40px;width:14px;height:18px;border-radius:70% 0 70% 0;opacity:.7;pointer-events:none;animation:fall linear infinite}
@@ -89,7 +93,7 @@
   .symbol p{color:#f1d9dc;opacity:.9}
   .duo{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
   .duo div{border:1px solid rgba(255,255,255,.15);border-radius:var(--radius);padding:1.8rem 1.4rem;text-align:center;background:rgba(255,255,255,.04)}
-  .duo svg{width:90px;height:120px}
+  .duo img{height:150px;width:auto;max-width:100%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.4))}
   .duo h3{font-size:1.6rem;margin:.6rem 0 .3rem}
   .duo .y h3{color:var(--gold)} .duo .r h3{color:#ff7a8c}
   .duo p{font-size:.9rem}
@@ -252,7 +256,8 @@
     </div>
     <div class="hero-art reveal">
       <div class="halo"></div><div class="ring"></div>
-      <img class="roses" src="assets/rosas.jpg" alt="Rosa vermelha e rosa amarela — Solidão Nunca Mais">
+      <img class="rose yellow" src="assets/rosa-amarela.png" alt="Rosa amarela, simbolizando o homem">
+      <img class="rose red" src="assets/rosa-vermelha.png" alt="Rosa vermelha, simbolizando a mulher">
       <div class="legend l1"><i style="background:#C0152F"></i>Rosa vermelha · ela</div>
       <div class="legend l2"><i style="background:#F2B823"></i>Rosa amarela · ele</div>
     </div>
@@ -304,12 +309,12 @@
     </div>
     <div class="duo reveal">
       <div class="y">
-        <svg viewBox="-30 -26 60 118" style="color:#F2B823"><use href="#rose"/></svg>
+        <img src="assets/rosa-amarela.png" alt="Rosa amarela">
         <h3>Rosa Amarela</h3>
         <p>Simboliza o homem: a alegria, a luz e a amizade que sustenta o amor.</p>
       </div>
       <div class="r">
-        <svg viewBox="-30 -26 60 118" style="color:#C0152F"><use href="#rose"/></svg>
+        <img src="assets/rosa-vermelha.png" alt="Rosa vermelha">
         <h3>Rosa Vermelha</h3>
         <p>Simboliza a mulher: a paixão, a coragem e a força do sentimento.</p>
       </div>
