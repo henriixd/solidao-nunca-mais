@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Duas rosas: amarela e vermelha">
+  <defs>
+    <g id="rose">
+      <path d="M0 16 C 3 40, -4 62, 0 88" fill="none" stroke="#3f6b3a" stroke-width="3" stroke-linecap="round"/>
+      <path d="M1 50 C 12 40, 24 42, 27 46 C 18 54, 8 54, 1 50 Z" fill="#4f8a47"/>
+      <path d="M-1 66 C -12 58, -22 60, -25 64 C -16 71, -7 71, -1 66 Z" fill="#4f8a47"/>
+      <path d="M-14 12 C -10 20, 10 20, 14 12 L 6 18 L 0 13 L -6 18 Z" fill="#4f8a47"/>
+      <path d="M-20 0 C -22 -16, -8 -24, 0 -21 C 8 -24, 22 -16, 20 0 C 18 16, -18 16, -20 0 Z" fill="currentColor"/>
+      <path d="M-20 0 C -18 12, -6 16, 0 15 C -10 10, -14 4, -20 0 Z" fill="#000" opacity=".18"/>
+      <path d="M20 0 C 18 12, 6 16, 0 15 C 10 10, 14 4, 20 0 Z" fill="#000" opacity=".12"/>
+      <path d="M-13 -12 C -6 -20, 8 -20, 13 -12 C 6 -15, -6 -15, -13 -12 Z" fill="#fff" opacity=".25"/>
+      <path d="M0 -3 C 6 -3, 6 5, 0 5 C -8 5, -9 -8, 0 -9 C 12 -9, 13 9, 0 10 C -14 10, -15 -13, 0 -14 C 10 -14, 15 -8, 15 -3" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <use href="#rose" transform="translate(44 34) rotate(-16)" color="#F2B823"/>
+  <use href="#rose" transform="translate(76 34) rotate(16)" color="#C0152F"/>
+</svg>
