@@ -506,6 +506,7 @@
   </div>
 </footer>
 
+<script src="assets/config.js"></script>
 <script>
   document.getElementById('ano').textContent = new Date().getFullYear();
 
@@ -560,14 +561,38 @@
     prev.style.visibility = i ? 'visible' : 'hidden';
     next.textContent = i === panes.length - 1 ? 'Enviar cadastro ♥' : 'Continuar →';
   }
-  next.addEventListener('click', () => {
+  next.addEventListener('click', async () => {
     if (!valid(step)) return;
     if (step < panes.length - 1) return show(step + 1);
-    const dados = Object.fromEntries(new FormData(form));
-    dados.personalidade = new FormData(form).getAll('personalidade');
-    dados.deseja = new FormData(form).getAll('deseja');
-    // TODO: enviar `dados` para o banco de dados (ex.: Supabase) quando o backend estiver pronto
-    console.log('Cadastro:', dados);
+    const fd = new FormData(form);
+    const num = v => (v === null || v === '' ? null : parseInt(v, 10));
+    const dados = {
+      nome: fd.get('nome').trim(), email: fd.get('email').trim(), whatsapp: fd.get('whatsapp').trim(),
+      nascimento: fd.get('nascimento'), cidade: fd.get('cidade').trim(),
+      genero: fd.get('genero'), estado_civil: fd.get('estado_civil') || null,
+      altura: num(fd.get('altura')), filhos: fd.get('filhos') || null,
+      personalidade: fd.getAll('personalidade'), sobre: fd.get('sobre').trim(),
+      procura_genero: fd.get('procura_genero'),
+      idade_min: num(fd.get('idade_min')) ?? 18, idade_max: num(fd.get('idade_max')) ?? 99,
+      intencao: fd.get('intencao') || null, distancia: fd.get('distancia'),
+      deseja: fd.getAll('deseja'), pessoa_ideal: fd.get('pessoa_ideal').trim()
+    };
+    if (dados.idade_min > dados.idade_max) [dados.idade_min, dados.idade_max] = [dados.idade_max, dados.idade_min];
+    next.disabled = true; next.textContent = 'Enviando…';
+    try {
+      const { supabaseUrl, supabaseKey } = window.SNM_CONFIG;
+      const r = await fetch(supabaseUrl + '/rest/v1/cadastros', {
+        method: 'POST',
+        headers: { apikey: supabaseKey, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify(dados)
+      });
+      if (!r.ok) throw new Error(await r.text());
+    } catch (e) {
+      console.error(e);
+      alert('Não foi possível enviar seu cadastro agora. Verifique sua conexão e tente novamente.');
+      next.disabled = false; next.textContent = 'Enviar cadastro ♥';
+      return;
+    }
     form.style.display = 'none';
     document.querySelector('.progress').style.display = 'none';
     document.getElementById('success').style.display = 'block';

@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel Admin · Solidão Nunca Mais</title>
+<link rel="icon" href="assets/logo-rosas.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--wine:#5a0f1f;--red:#C0152F;--gold:#F2B823;--cream:#fdf7f1;--blush:#f8e6e3;--ink:#2b1418;--muted:#7a5a5e;--line:#ecd4cf;--ok:#2f7d32;--okbg:#e6f4e6;--no:#8a5b00;--nobg:#fff3d6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Jost",system-ui,sans-serif;background:var(--cream);color:var(--ink);font-size:15px;line-height:1.5}
+  h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;color:var(--wine);line-height:1.1}
+  button,input,select,textarea{font:inherit}
+  .btn{border:0;border-radius:999px;padding:.6rem 1.2rem;cursor:pointer;font-weight:500;background:linear-gradient(135deg,var(--red),var(--wine));color:#fff}
+  .btn:disabled{opacity:.6;cursor:wait}
+  .btn.ghost{background:#fff;color:var(--wine);border:1.5px solid var(--line)}
+  .btn.small{padding:.35rem .8rem;font-size:.85rem}
+  .btn.danger{background:#fff;color:#b00020;border:1.5px solid #f0c2c8}
+  input,select,textarea{width:100%;padding:.55rem .8rem;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--red)}
+  label{display:block;font-size:.78rem;font-weight:500;color:var(--muted);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.04em}
+  .hidden{display:none !important}
+
+  /* Login */
+  #login{min-height:100vh;display:grid;place-items:center;padding:16px;background:radial-gradient(700px 400px at 80% 0,rgba(242,184,35,.18),transparent),radial-gradient(700px 500px at 0 100%,rgba(192,21,47,.12),transparent),var(--cream)}
+  .login-card{background:#fff;border-radius:24px;padding:2.4rem 2rem;width:min(400px,100%);box-shadow:0 20px 50px -20px rgba(90,15,31,.35);text-align:center}
+  .login-card img{width:84px;height:84px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--gold)}
+  .login-card h1{font-size:2rem;margin:1rem 0 .2rem}
+  .login-card p{color:var(--muted);margin-bottom:1.5rem;font-size:.95rem}
+  .login-card form{display:grid;gap:.9rem;text-align:left}
+  .msg{font-size:.9rem;color:#b00020;min-height:1.2em;text-align:center}
+
+  /* App */
+  header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem 1.2rem;max-width:1400px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+  .brand img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--gold)}
+  .brand b{font-family:"Cormorant Garamond",serif;font-size:1.3rem;color:var(--wine)}
+  .brand small{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase}
+  .who{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:.8rem}
+  .tabs{display:flex;gap:.3rem;max-width:1400px;margin:0 auto;padding:0 1.2rem;overflow-x:auto}
+  .tabs button{background:none;border:0;padding:.75rem 1rem;cursor:pointer;color:var(--muted);font-weight:500;border-bottom:3px solid transparent;white-space:nowrap}
+  .tabs button.active{color:var(--wine);border-color:var(--red)}
+  .tabs .count{background:var(--blush);color:var(--red);border-radius:999px;padding:0 .5rem;font-size:.75rem;margin-left:.3rem}
+  main{max-width:1400px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1rem 1.2rem}
+  .stat span{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .stat b{display:block;font-family:"Cormorant Garamond",serif;font-size:2.2rem;color:var(--wine);line-height:1.1}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.2rem}
+  .filters{display:grid;grid-template-columns:2fr repeat(6,1fr) auto;gap:.7rem;align-items:end;margin-bottom:1rem}
+  .age-range{display:flex;gap:.3rem}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;gap:1rem;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th{text-align:left;font-weight:500;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;padding:.6rem .7rem;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+  th[data-sort]:hover{color:var(--red)}
+  td{padding:.65rem .7rem;border-bottom:1px solid #f5e9e6;vertical-align:middle}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:#fdf2f0}
+  .badge{display:inline-block;padding:.15rem .6rem;border-radius:999px;font-size:.78rem;font-weight:500;white-space:nowrap}
+  .badge.sim{background:var(--okbg);color:var(--ok)}
+  .badge.nao{background:var(--nobg);color:var(--no)}
+  .badge.st-pausado{background:#eee;color:#666}.badge.st-encerrado{background:#f3dede;color:#8a1c1c}
+  .score{font-weight:600;color:var(--wine)}
+  .bar{height:6px;border-radius:3px;background:var(--blush);overflow:hidden;width:80px;display:inline-block;vertical-align:middle;margin-left:.4rem}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--red))}
+  .empty{text-align:center;color:var(--muted);padding:2.5rem 1rem}
+  .muted{color:var(--muted)}
+
+  /* Pares */
+  .pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:1rem}
+  .pair{border:1px solid var(--line);border-radius:18px;padding:1rem 1.1rem;background:#fff}
+  .pair-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem}
+  .pair-people{display:grid;grid-template-columns:1fr auto 1fr;gap:.6rem;align-items:center}
+  .person{background:var(--cream);border-radius:14px;padding:.7rem .8rem;cursor:pointer}
+  .person:hover{background:var(--blush)}
+  .person b{display:block}
+  .person small{color:var(--muted);display:block;font-size:.8rem}
+  .heart{color:var(--red);font-size:1.3rem}
+
+  /* Amigo */
+  .friend{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+  .friend fieldset{border:1px solid var(--line);border-radius:16px;padding:1rem 1.1rem;display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+  .friend legend{font-family:"Cormorant Garamond",serif;font-size:1.3rem;color:var(--wine);padding:0 .4rem;font-weight:700}
+  .friend .full{grid-column:1/-1}
+  .chips{display:flex;flex-wrap:wrap;gap:.35rem}
+  .chips label{margin:0;text-transform:none;letter-spacing:0;cursor:pointer;font-size:.85rem}
+  .chips input{display:none}
+  .chips span{display:inline-block;padding:.3rem .75rem;border-radius:999px;border:1.5px solid var(--line);color:var(--ink);font-weight:400}
+  .chips input:checked+span{background:var(--red);border-color:var(--red);color:#fff}
+  .check{display:flex;gap:.5rem;align-items:center;text-transform:none;letter-spacing:0;font-size:.9rem;color:var(--ink)}
+  .check input{width:auto;accent-color:var(--red)}
+
+  /* Modal */
+  dialog{margin:auto;border:0;border-radius:22px;padding:0;width:min(780px,calc(100% - 24px));max-height:calc(100vh - 40px);box-shadow:0 30px 80px -20px rgba(0,0,0,.4)}
+  dialog::backdrop{background:rgba(43,20,24,.45)}
+  .modal-head{display:flex;justify-content:space-between;align-items:flex-start;padding:1.3rem 1.5rem;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
+  .modal-head h2{font-size:1.9rem}
+  .modal-body{padding:1.3rem 1.5rem;display:grid;gap:1.2rem}
+  .kv{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem 1rem}
+  .kv div span{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .block h3{font-size:1.25rem;margin-bottom:.4rem}
+  .block p{white-space:pre-wrap;color:var(--ink)}
+  .tags{display:flex;flex-wrap:wrap;gap:.3rem}
+  .tags span{background:var(--blush);color:var(--wine);border-radius:999px;padding:.15rem .6rem;font-size:.82rem}
+  .pay-form{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:.6rem;align-items:end}
+  .actions{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;align-items:end}
+  .x{background:none;border:0;font-size:1.6rem;cursor:pointer;color:var(--muted);line-height:1}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--wine);color:#fff;padding:.7rem 1.2rem;border-radius:999px;font-size:.9rem;z-index:100;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+
+  @media (max-width:1100px){.filters{grid-template-columns:1fr 1fr 1fr}.filters .search{grid-column:1/-1}}
+  @media (max-width:760px){
+    .stats{grid-template-columns:1fr 1fr}
+    .friend,.friend fieldset,.kv{grid-template-columns:1fr}
+    .pairs{grid-template-columns:1fr}
+    .pay-form{grid-template-columns:1fr 1fr}
+    .who span{display:none}
+    .filters{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="login">
+  <div class="login-card">
+    <img src="assets/logo-rosas.png" alt="">
+    <h1>Painel Admin</h1>
+    <p>Solidão Nunca Mais</p>
+    <form id="loginForm">
+      <div><label for="lemail">E-mail</label><input id="lemail" type="email" required autocomplete="username"></div>
+      <div><label for="lsenha">Senha</label><input id="lsenha" type="password" required autocomplete="current-password"></div>
+      <button class="btn" type="submit">Entrar</button>
+      <div class="msg" id="loginMsg"></div>
+    </form>
+  </div>
+</section>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header>
+    <div class="top">
+      <a class="brand" href="index.html"><img src="assets/logo-rosas.png" alt=""><div><b>Solidão Nunca Mais</b><small>Painel Admin</small></div></a>
+      <div class="who"><span id="whoami"></span><button class="btn ghost small" id="logout">Sair</button></div>
+    </div>
+    <nav class="tabs">
+      <button class="active" data-tab="cadastros">Cadastros <span class="count" id="cCad">0</span></button>
+      <button data-tab="compativeis">Compatíveis <span class="count" id="cComp">0</span></button>
+      <button data-tab="amigo">Buscar para um amigo</button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="stats">
+      <div class="stat"><span>Cadastros</span><b id="sTotal">–</b></div>
+      <div class="stat"><span>Novos (7 dias)</span><b id="sNovos">–</b></div>
+      <div class="stat"><span>Já pagaram</span><b id="sPagos">–</b></div>
+      <div class="stat"><span>Pares compatíveis</span><b id="sPares">–</b></div>
+    </div>
+
+    <!-- CADASTROS -->
+    <section id="tab-cadastros" class="panel">
+      <div class="filters">
+        <div class="search"><label>Buscar</label><input id="fBusca" placeholder="Nome, e-mail, WhatsApp, cidade…"></div>
+        <div><label>Gênero</label><select id="fGenero"><option value="">Todos</option><option>Homem</option><option>Mulher</option><option>Prefiro não dizer</option></select></div>
+        <div><label>Procura</label><select id="fProcura"><option value="">Todos</option><option>Homem</option><option>Mulher</option><option>Tanto faz</option></select></div>
+        <div><label>Idade</label><div class="age-range"><input id="fIdMin" type="number" placeholder="de" min="18"><input id="fIdMax" type="number" placeholder="até" min="18"></div></div>
+        <div><label>Intenção</label><select id="fIntencao"><option value="">Todas</option><option>Sério / namoro</option><option>Casamento</option><option>Amizade que pode virar algo mais</option></select></div>
+        <div><label>Já pagou</label><select id="fPagou"><option value="">Todos</option><option value="sim">Sim</option><option value="nao">Não</option></select></div>
+        <div><label>Status</label><select id="fStatus"><option value="">Todos</option><option value="ativo">Ativo</option><option value="pausado">Pausado</option><option value="encerrado">Encerrado</option></select></div>
+        <div><button class="btn ghost" id="fLimpar" type="button">Limpar</button></div>
+      </div>
+      <div class="toolbar"><span id="resumo"></span><span><button class="btn ghost small" id="recarregar">↻ Atualizar</button> <button class="btn ghost small" id="exportar">⇩ Exportar CSV</button></span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th data-sort="created_at">Data</th><th data-sort="nome">Nome</th><th data-sort="idade">Idade</th>
+            <th data-sort="genero">Gênero</th><th data-sort="procura_genero">Procura</th><th data-sort="cidade">Cidade</th>
+            <th data-sort="intencao">Intenção</th><th>WhatsApp</th><th data-sort="ja_pagou">Já pagou</th><th data-sort="status">Status</th>
+          </tr></thead>
+          <tbody id="tbCad"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- COMPATÍVEIS -->
+    <section id="tab-compativeis" class="panel hidden">
+      <div class="filters" style="grid-template-columns:1fr 1fr 1fr auto">
+        <div><label>Pontuação mínima: <b id="minScoreLbl">0</b></label><input id="minScore" type="range" min="0" max="100" step="5" value="0"></div>
+        <div><label>Pagamento</label><select id="pPagou"><option value="">Todos os pares</option><option value="nenhum">Nenhum dos dois pagou</option><option value="um">Só um pagou</option><option value="ambos">Os dois pagaram</option></select></div>
+        <div><label>Buscar pessoa</label><input id="pBusca" placeholder="Nome…"></div>
+        <div><button class="btn ghost" id="recarregarPares" type="button">↻ Atualizar</button></div>
+      </div>
+      <p class="muted" style="font-size:.88rem;margin-bottom:1rem">Um par aparece aqui quando cada pessoa se encaixa no que a outra procura (gênero, faixa de idade e distância). A pontuação mede quanto a personalidade de cada uma combina com o que a outra deseja, com bônus quando buscam o mesmo tipo de relacionamento.</p>
+      <div class="pairs" id="pairs"></div>
+    </section>
+
+    <!-- AMIGO -->
+    <section id="tab-amigo" class="panel hidden">
+      <form id="friendForm">
+        <div class="friend">
+          <fieldset>
+            <legend>Como é o amigo / amiga</legend>
+            <div class="full"><label>Nome (só para referência)</label><input name="nome" placeholder="Ex.: Paulo, amigo do trabalho"></div>
+            <div><label>Gênero</label><select name="genero" required><option value="">Selecione</option><option>Homem</option><option>Mulher</option><option>Prefiro não dizer</option></select></div>
+            <div><label>Idade</label><input name="idade" type="number" min="18" max="120" required></div>
+            <div class="full"><label>Cidade / Estado</label><input name="cidade" placeholder="Porto Alegre / RS" required></div>
+            <div class="full"><label>Personalidade</label><div class="chips" data-name="personalidade"></div></div>
+          </fieldset>
+          <fieldset>
+            <legend>Quem ele(a) procura</legend>
+            <div><label>Procura</label><select name="procura_genero" required><option value="">Selecione</option><option>Homem</option><option>Mulher</option><option>Tanto faz</option></select></div>
+            <div><label>Distância</label><select name="distancia"><option>Mesma cidade</option><option selected>Mesmo estado</option><option>Qualquer lugar do Brasil</option></select></div>
+            <div><label>Idade de</label><input name="idade_min" type="number" min="18" value="25"></div>
+            <div><label>até</label><input name="idade_max" type="number" min="18" value="45"></div>
+            <div class="full"><label>A pessoa ideal é</label><div class="chips" data-name="deseja"></div></div>
+            <div class="full"><label class="check"><input type="checkbox" name="mutuo" checked> Mostrar só quem também aceitaria o amigo (gênero, idade e distância)</label></div>
+          </fieldset>
+        </div>
+        <button class="btn" type="submit">Procurar no banco de cadastros ♥</button>
+      </form>
+      <div id="friendResults" style="margin-top:1.4rem"></div>
+    </section>
+  </main>
+</div>
+
+<!-- DETALHES -->
+<dialog id="detalhe">
+  <div class="modal-head"><div><h2 id="dNome"></h2><span class="muted" id="dSub"></span></div><button class="x" onclick="detalhe.close()" aria-label="Fechar">×</button></div>
+  <div class="modal-body" id="dBody"></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/config.js"></script>
+<script>
+const { supabaseUrl, supabaseKey } = window.SNM_CONFIG;
+const sb = supabase.createClient(supabaseUrl, supabaseKey);
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtData = d => new Date(d).toLocaleDateString('pt-BR');
+const fmtHora = d => new Date(d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const zap = w => 'https://wa.me/' + (String(w).replace(/\D/g, '').replace(/^(?!55)/, '55'));
+const PERSONALIDADES = ['Romântico(a)','Caseiro(a)','Aventureiro(a)','Extrovertido(a)','Tímido(a)','Religioso(a)','Esportista','Bem-humorado(a)','Trabalhador(a)','Família em primeiro lugar'];
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
+
+let CAD = [], PARES = [], byId = {}, sortKey = 'created_at', sortDir = -1;
+
+/* ---------- Login ---------- */
+$('#loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button'); btn.disabled = true; $('#loginMsg').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email: $('#lemail').value.trim(), password: $('#lsenha').value });
+  btn.disabled = false;
+  if (error) { $('#loginMsg').textContent = 'E-mail ou senha incorretos.'; return; }
+  entrar();
+});
+$('#logout').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+
+async function entrar() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { data: admin } = await sb.rpc('is_admin');
+  if (!admin) {
+    $('#loginMsg').textContent = 'Este usuário não tem permissão de administrador.';
+    await sb.auth.signOut(); return;
+  }
+  $('#whoami').textContent = session.user.email;
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  await Promise.all([carregarCadastros(), carregarPares()]);
+}
+
+/* ---------- Abas ---------- */
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('active', x === b));
+  ['cadastros', 'compativeis', 'amigo'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== b.dataset.tab));
+}));
+
+/* ---------- Cadastros ---------- */
+async function carregarCadastros() {
+  const { data, error } = await sb.from('cadastros_admin').select('*').order('created_at', { ascending: false });
+  if (error) { toast('Erro ao carregar cadastros'); console.error(error); return; }
+  CAD = data; byId = Object.fromEntries(CAD.map(c => [c.id, c]));
+  const semana = Date.now() - 7 * 864e5;
+  $('#sTotal').textContent = CAD.length;
+  $('#sNovos').textContent = CAD.filter(c => new Date(c.created_at) > semana).length;
+  $('#sPagos').textContent = CAD.filter(c => c.ja_pagou).length;
+  $('#cCad').textContent = CAD.length;
+  renderCadastros();
+}
+function filtrados() {
+  const q = norm($('#fBusca').value), g = $('#fGenero').value, p = $('#fProcura').value, it = $('#fIntencao').value,
+        pg = $('#fPagou').value, st = $('#fStatus').value, mn = +$('#fIdMin').value || 0, mx = +$('#fIdMax').value || 999;
+  return CAD.filter(c =>
+    (!q || norm([c.nome, c.email, c.whatsapp, c.cidade].join(' ')).includes(q)) &&
+    (!g || c.genero === g) && (!p || c.procura_genero === p) && (!it || c.intencao === it) &&
+    (!st || c.status === st) && (!pg || (pg === 'sim') === c.ja_pagou) && c.idade >= mn && c.idade <= mx
+  ).sort((a, b) => { const x = a[sortKey] ?? '', y = b[sortKey] ?? ''; return (x > y ? 1 : x < y ? -1 : 0) * sortDir; });
+}
+const badgePagou = c => c.ja_pagou ? `<span class="badge sim">Sim${c.qtd_pagamentos > 1 ? ' · ' + c.qtd_pagamentos + 'x' : ''}</span>` : '<span class="badge nao">Não</span>';
+const badgeStatus = s => s === 'ativo' ? '<span class="muted">Ativo</span>' : `<span class="badge st-${s}">${s[0].toUpperCase() + s.slice(1)}</span>`;
+function renderCadastros() {
+  const lista = filtrados();
+  $('#resumo').textContent = `${lista.length} de ${CAD.length} cadastro(s)`;
+  $('#tbCad').innerHTML = lista.length ? lista.map(c => `
+    <tr data-id="${c.id}">
+      <td>${fmtData(c.created_at)}</td><td><b>${esc(c.nome)}</b></td><td>${c.idade}</td>
+      <td>${esc(c.genero)}</td><td>${esc(c.procura_genero)}</td><td>${esc(c.cidade)}</td>
+      <td>${esc(c.intencao || '–')}</td><td>${esc(c.whatsapp)}</td><td>${badgePagou(c)}</td><td>${badgeStatus(c.status)}</td>
+    </tr>`).join('') : `<tr><td colspan="10" class="empty">${CAD.length ? 'Nenhum cadastro com esses filtros.' : 'Ainda não há cadastros. Eles aparecem aqui assim que alguém se cadastrar no site.'}</td></tr>`;
+}
+['#fBusca', '#fGenero', '#fProcura', '#fIntencao', '#fPagou', '#fStatus', '#fIdMin', '#fIdMax'].forEach(s => $(s).addEventListener('input', renderCadastros));
+$('#fLimpar').addEventListener('click', () => { document.querySelectorAll('#tab-cadastros .filters input, #tab-cadastros .filters select').forEach(i => i.value = ''); renderCadastros(); });
+$('#recarregar').addEventListener('click', async () => { await carregarCadastros(); toast('Atualizado'); });
+document.querySelectorAll('th[data-sort]').forEach(th => th.addEventListener('click', () => {
+  const k = th.dataset.sort; sortDir = sortKey === k ? -sortDir : 1; sortKey = k; renderCadastros();
+}));
+$('#tbCad').addEventListener('click', e => { const tr = e.target.closest('tr[data-id]'); if (tr) abrir(tr.dataset.id); });
+$('#exportar').addEventListener('click', () => {
+  const cols = ['created_at','nome','email','whatsapp','idade','nascimento','cidade','genero','estado_civil','altura','filhos','personalidade','sobre','procura_genero','idade_min','idade_max','intencao','distancia','deseja','pessoa_ideal','ja_pagou','status','observacoes'];
+  const cel = v => '"' + String(Array.isArray(v) ? v.join(', ') : typeof v === 'boolean' ? (v ? 'Sim' : 'Não') : v ?? '').replace(/"/g, '""') + '"';
+  const csv = '﻿' + [cols.join(';'), ...filtrados().map(c => cols.map(k => cel(c[k])).join(';'))].join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = 'cadastros-' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+});
+
+/* ---------- Detalhes ---------- */
+async function abrir(id) {
+  const c = byId[id]; if (!c) return;
+  $('#dNome').textContent = c.nome;
+  $('#dSub').textContent = `${c.idade} anos · ${c.genero} · ${c.cidade} · cadastrado em ${fmtHora(c.created_at)}`;
+  const { data: pags } = await sb.from('pagamentos').select('*').eq('cadastro_id', id).order('created_at', { ascending: false });
+  const pares = PARES.filter(p => p.a_id === id || p.b_id === id);
+  const tags = a => a && a.length ? `<div class="tags">${a.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : '<span class="muted">–</span>';
+  $('#dBody').innerHTML = `
+    <div class="kv">
+      <div><span>E-mail</span><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div>
+      <div><span>WhatsApp</span><a href="${zap(c.whatsapp)}" target="_blank" rel="noopener">${esc(c.whatsapp)}</a></div>
+      <div><span>Nascimento</span>${new Date(c.nascimento + 'T12:00').toLocaleDateString('pt-BR')}</div>
+      <div><span>Estado civil</span>${esc(c.estado_civil || '–')}</div>
+      <div><span>Altura</span>${c.altura ? c.altura + ' cm' : '–'}</div>
+      <div><span>Filhos</span>${esc(c.filhos || '–')}</div>
+    </div>
+    <div class="block"><h3>Como é</h3>${tags(c.personalidade)}<p style="margin-top:.5rem">${esc(c.sobre || '')}</p></div>
+    <div class="block"><h3>Quem procura</h3>
+      <div class="kv" style="margin-bottom:.6rem">
+        <div><span>Gênero</span>${esc(c.procura_genero)}</div><div><span>Idade</span>${c.idade_min} a ${c.idade_max} anos</div><div><span>Distância</span>${esc(c.distancia)}</div>
+        <div><span>Intenção</span>${esc(c.intencao || '–')}</div>
+      </div>${tags(c.deseja)}<p style="margin-top:.5rem">${esc(c.pessoa_ideal || '')}</p></div>
+    <div class="block"><h3>Pares compatíveis (${pares.length})</h3>${pares.length ? `<div class="tags">${pares.map(p => { const o = byId[p.a_id === id ? p.b_id : p.a_id]; return o ? `<span style="cursor:pointer" data-open="${o.id}">${esc(o.nome)} · ${p.pontuacao}%</span>` : ''; }).join('')}</div>` : '<span class="muted">Nenhum par compatível no momento.</span>'}</div>
+    <div class="block"><h3>Pagamentos ${badgePagou(c)}</h3>
+      ${pags && pags.length ? `<table style="margin-bottom:.8rem"><tbody>${pags.map(p => `<tr style="cursor:default"><td>${fmtHora(p.created_at)}</td><td>R$ ${Number(p.valor).toFixed(2).replace('.', ',')}</td><td>${esc(p.metodo)}</td><td>${p.par_id && byId[p.par_id] ? 'Par: ' + esc(byId[p.par_id].nome) : ''}</td><td class="muted">${esc(p.observacao || '')}</td><td><button class="btn danger small" data-delpag="${p.id}">Remover</button></td></tr>`).join('')}</tbody></table>` : ''}
+      <form class="pay-form" id="payForm">
+        <div><label>Valor (R$)</label><input name="valor" type="number" step="0.01" value="70" required></div>
+        <div><label>Forma</label><select name="metodo"><option>Pix</option><option>Cartão de crédito</option></select></div>
+        <div><label>Referente ao par</label><select name="par_id"><option value="">—</option>${pares.map(p => { const o = byId[p.a_id === id ? p.b_id : p.a_id]; return o ? `<option value="${o.id}">${esc(o.nome)}</option>` : ''; }).join('')}</select></div>
+        <button class="btn small" type="submit">Registrar pagamento</button>
+      </form></div>
+    <div class="block"><h3>Anotações da equipe</h3><textarea id="dObs" rows="3">${esc(c.observacoes || '')}</textarea></div>
+    <div class="actions">
+      <div style="min-width:180px"><label>Status</label><select id="dStatus"><option value="ativo">Ativo</option><option value="pausado">Pausado</option><option value="encerrado">Encerrado</option></select></div>
+      <div style="display:flex;gap:.5rem"><button class="btn danger" id="dApagar">Apagar cadastro</button><button class="btn" id="dSalvar">Salvar alterações</button></div>
+    </div>`;
+  $('#dStatus').value = c.status;
+  $('#dBody').querySelectorAll('[data-open]').forEach(s => s.addEventListener('click', () => abrir(s.dataset.open)));
+  $('#dBody').querySelectorAll('[data-delpag]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Remover este pagamento?')) return;
+    const { error } = await sb.from('pagamentos').delete().eq('id', b.dataset.delpag);
+    if (error) return toast('Erro ao remover');
+    await carregarCadastros(); abrir(id); toast('Pagamento removido');
+  }));
+  $('#payForm').addEventListener('submit', async e => {
+    e.preventDefault(); const f = new FormData(e.target);
+    const { error } = await sb.from('pagamentos').insert({ cadastro_id: id, valor: +f.get('valor'), metodo: f.get('metodo'), par_id: f.get('par_id') || null });
+    if (error) return toast('Erro ao registrar pagamento');
+    await carregarCadastros(); renderPares(); abrir(id); toast('Pagamento registrado');
+  });
+  $('#dSalvar').addEventListener('click', async () => {
+    const { error } = await sb.from('cadastros').update({ status: $('#dStatus').value, observacoes: $('#dObs').value || null }).eq('id', id);
+    if (error) return toast('Erro ao salvar');
+    await carregarCadastros(); await carregarPares(); detalhe.close(); toast('Alterações salvas');
+  });
+  $('#dApagar').addEventListener('click', async () => {
+    if (!confirm(`Apagar definitivamente o cadastro de ${c.nome}? Isso não pode ser desfeito.`)) return;
+    const { error } = await sb.from('cadastros').delete().eq('id', id);
+    if (error) return toast('Erro ao apagar');
+    detalhe.close(); await carregarCadastros(); await carregarPares(); toast('Cadastro apagado');
+  });
+  if (!detalhe.open) detalhe.showModal();
+  detalhe.scrollTop = 0;
+}
+
+/* ---------- Compatíveis ---------- */
+async function carregarPares() {
+  const { data, error } = await sb.rpc('compatibilidades', { p_min: 0 });
+  if (error) { toast('Erro ao calcular compatibilidades'); console.error(error); return; }
+  PARES = data; $('#sPares').textContent = PARES.length; $('#cComp').textContent = PARES.length;
+  renderPares();
+}
+function pessoaCard(c) {
+  return `<div class="person" data-open="${c.id}"><b>${esc(c.nome)}</b><small>${c.idade} anos · ${esc(c.genero)} · ${esc(c.cidade)}</small><small style="margin-top:.3rem">${badgePagou(c)}</small></div>`;
+}
+function renderPares() {
+  const min = +$('#minScore').value, pg = $('#pPagou').value, q = norm($('#pBusca').value);
+  const lista = PARES.filter(p => {
+    const a = byId[p.a_id], b = byId[p.b_id]; if (!a || !b) return false;
+    const n = (a.ja_pagou ? 1 : 0) + (b.ja_pagou ? 1 : 0);
+    return p.pontuacao >= min && (!q || norm(a.nome + ' ' + b.nome).includes(q)) &&
+      (!pg || (pg === 'nenhum' && n === 0) || (pg === 'um' && n === 1) || (pg === 'ambos' && n === 2));
+  });
+  $('#pairs').innerHTML = lista.length ? lista.map(p => `
+    <div class="pair">
+      <div class="pair-head"><span class="score">${p.pontuacao}% compatíveis <span class="bar"><i style="width:${p.pontuacao}%"></i></span></span>
+        <span class="muted" style="font-size:.82rem">${p.mesma_intencao ? '♥ Mesma intenção: ' + esc(byId[p.a_id].intencao) : 'Intenções diferentes'}</span></div>
+      <div class="pair-people">${pessoaCard(byId[p.a_id])}<span class="heart">♥</span>${pessoaCard(byId[p.b_id])}</div>
+    </div>`).join('') : `<div class="empty">${PARES.length ? 'Nenhum par com esses filtros.' : 'Ainda não há pares compatíveis. Eles aparecem aqui automaticamente conforme as pessoas se cadastram.'}</div>`;
+}
+$('#pairs').addEventListener('click', e => { const p = e.target.closest('[data-open]'); if (p) abrir(p.dataset.open); });
+$('#minScore').addEventListener('input', () => { $('#minScoreLbl').textContent = $('#minScore').value; renderPares(); });
+['#pPagou', '#pBusca'].forEach(s => $(s).addEventListener('input', renderPares));
+$('#recarregarPares').addEventListener('click', async () => { await carregarCadastros(); await carregarPares(); toast('Atualizado'); });
+
+/* ---------- Buscar para amigo ---------- */
+document.querySelectorAll('#friendForm .chips').forEach(box => {
+  box.innerHTML = PERSONALIDADES.map(p => `<label><input type="checkbox" name="${box.dataset.name}" value="${p}"><span>${p}</span></label>`).join('');
+});
+$('#friendForm').addEventListener('submit', async e => {
+  e.preventDefault(); const f = new FormData(e.target); const btn = e.target.querySelector('button[type=submit]');
+  let mn = +f.get('idade_min') || 18, mx = +f.get('idade_max') || 99; if (mn > mx) [mn, mx] = [mx, mn];
+  btn.disabled = true;
+  const { data, error } = await sb.rpc('buscar_para_amigo', {
+    f_genero: f.get('genero'), f_idade: +f.get('idade'), f_cidade: f.get('cidade'), f_personalidade: f.getAll('personalidade'),
+    f_procura_genero: f.get('procura_genero'), f_idade_min: mn, f_idade_max: mx, f_distancia: f.get('distancia'),
+    f_deseja: f.getAll('deseja'), f_mutuo: !!f.get('mutuo')
+  });
+  btn.disabled = false;
+  if (error) { toast('Erro na busca'); console.error(error); return; }
+  const nome = f.get('nome') ? esc(f.get('nome')) : 'o amigo';
+  $('#friendResults').innerHTML = `<h3 style="font-size:1.5rem;margin-bottom:.6rem">${data.length} pessoa(s) para ${nome}</h3>` + (data.length ? `
+    <div class="table-wrap"><table><thead><tr><th>Combina</th><th>Nome</th><th>Idade</th><th>Gênero</th><th>Cidade</th><th>Intenção</th><th>Personalidade</th><th>WhatsApp</th><th>Já pagou</th></tr></thead>
+    <tbody>${data.map(r => { const c = byId[r.cadastro_id]; return c ? `<tr data-id="${c.id}"><td class="score">${r.pontuacao}%<span class="bar"><i style="width:${r.pontuacao}%"></i></span></td><td><b>${esc(c.nome)}</b></td><td>${c.idade}</td><td>${esc(c.genero)}</td><td>${esc(c.cidade)}</td><td>${esc(c.intencao || '–')}</td><td>${esc((c.personalidade || []).join(', '))}</td><td>${esc(c.whatsapp)}</td><td>${badgePagou(c)}</td></tr>` : ''; }).join('')}</tbody></table></div>`
+    : '<div class="empty">Ninguém no banco combina com esse perfil por enquanto. Tente ampliar a faixa de idade ou a distância.</div>');
+  $('#friendResults').querySelectorAll('tr[data-id]').forEach(tr => tr.addEventListener('click', () => abrir(tr.dataset.id)));
+});
+
+entrar();
+</script>
+</body>
+</html>

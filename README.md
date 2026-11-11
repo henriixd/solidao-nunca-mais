@@ -16,17 +16,29 @@ O logo une duas rosas: a **vermelha** simboliza o **amor** e a **amarela** simbo
 ## Estrutura
 
 ```
-index.html        Página única (HTML + CSS + JS, sem dependências)
-assets/logo.svg   Logo com as duas rosas
+index.html        Site público com o cadastro (grava no Supabase)
+admin.html        Painel admin: cadastros com filtros, pares compatíveis,
+                  busca manual para amigos e registro de pagamentos
+assets/config.js  URL e chave pública do Supabase
+assets/           Imagens das rosas e logo
 ```
+
+## Banco de dados (Supabase: projeto `solidao-nunca-mais`)
+
+- `cadastros`: todos os cadastros do site. Visitantes só podem **inserir**; apenas admins leem, editam e apagam.
+- `pagamentos`: pagamentos registrados por cadastro (a coluna "Já pagou" do painel vem daqui).
+- `admins`: e-mails com acesso ao painel. Para adicionar um admin, crie o usuário em
+  *Authentication → Users* no Supabase e rode: `insert into admins (email) values ('email@exemplo.com');`
+- `compatibilidades()`: pares compatíveis nos dois sentidos (gênero, faixa de idade, distância) com pontuação de afinidade.
+- `buscar_para_amigo(...)`: busca manual no banco para alguém que não está cadastrado.
 
 Para ver, basta abrir o `index.html` no navegador. Também funciona direto no GitHub Pages.
 
 ## Próximos passos
 
-- [ ] Salvar os cadastros em um banco de dados (ex.: Supabase) — veja o `TODO` no final do `index.html`
-- [ ] Algoritmo de cruzamento de dados
-- [ ] Painel da equipe para ver as compatibilidades
+- [x] Salvar os cadastros no Supabase
+- [x] Cruzamento de dados
+- [x] Painel admin
 - [ ] Pagamento via Pix e cartão (ex.: Mercado Pago)
 - [ ] Liberação do contato / agendamento do encontro após ambos pagarem
 - [ ] Página de política de privacidade (LGPD) e termos de uso
