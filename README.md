@@ -2,7 +2,7 @@
 
 Site da agência de relacionamentos **Solidão Nunca Mais**.
 
-O logo une duas rosas: a **amarela** simboliza o homem e a **vermelha** simboliza a mulher.
+O logo une duas rosas: a **vermelha** simboliza o **amor** e a **amarela** simboliza a **fidelidade**. A agência é aberta a todos os casais, inclusive do mesmo sexo.
 
 ## Como funciona o serviço
 
