@@ -35,6 +35,8 @@ Deno.serve(async (req) => {
   const r = await fetch(`https://api.mercadopago.com/v1/orders/${encodeURIComponent(id)}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  // Order inexistente (ex.: "Simular notificação" com id inventado): nada a fazer.
+  if (r.status === 404) return new Response("order não encontrada", { status: 200 });
   if (!r.ok) {
     console.error("Não consegui consultar a order", id, r.status, await r.text());
     // 500 faz o Mercado Pago tentar de novo mais tarde.
