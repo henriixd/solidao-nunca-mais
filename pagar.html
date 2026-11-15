@@ -106,7 +106,7 @@ async function iniciar() {
       <li>Nenhum dado seu é compartilhado antes disso</li>
     </ul>
     <button class="btn" id="pagar">Quero conhecer</button>
-    <p class="nota">Você será levado ao ambiente seguro do Mercado Pago.</p>`;
+    <p class="nota">Você será levado ao ambiente seguro do Mercado Pago. Veja os <a href="privacidade.html#termos" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="privacidade.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</p>`;
 
   document.getElementById('pagar').addEventListener('click', async e => {
     const b = e.currentTarget; b.disabled = true; b.textContent = 'Abrindo o Mercado Pago…';

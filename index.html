@@ -160,6 +160,7 @@
   .q textarea{min-height:90px;resize:vertical}
   .check{display:flex;gap:.6rem;align-items:flex-start;font-size:.88rem;color:var(--muted);cursor:pointer}
   .check input{width:auto !important;margin-top:.25rem;accent-color:var(--red)}
+  .check a{color:var(--red);font-weight:500}.check b{color:var(--ink);font-weight:600}
   .wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;gap:1rem}
   .wiz-nav .btn[disabled]{opacity:.6;cursor:wait}
   .cheer{font-size:.85rem;color:var(--red);font-style:italic;opacity:0;transition:opacity .4s}
@@ -477,6 +478,8 @@
         <li><a href="#como-funciona">Como funciona</a></li>
         <li><a href="#valores">Valores</a></li>
         <li><a href="#duvidas">Dúvidas</a></li>
+        <li><a href="privacidade.html#termos">Termos de Uso</a></li>
+        <li><a href="privacidade.html#privacidade">Política de Privacidade</a></li>
       </ul>
       <ul>
         <li>contato@solidaonuncamais.com.br</li>
@@ -516,6 +519,7 @@
 
   // ---------- Formulário em etapas ----------
   const O = window.SNM_OPCOES;
+  const TERMOS_VERSAO = '2026-11-15';
   const STEPS = [
     { e: '🌹', t: 'Vamos começar', d: 'Seus dados ficam em sigilo. Só usamos para avisar quando houver alguém compatível.', q: [
       { id: 'nome', l: 'Seu nome', type: 'text', req: 1, ph: 'Como você se chama?', ac: 'name' },
@@ -562,8 +566,9 @@
       { id: 'pref_filhos', l: 'Sobre filhos', type: 'single', o: 'pref_filhos', def: 'Aceito quem tem filhos' },
       { id: 'sobre', l: 'Conte algo sobre você', hint: 'opcional', type: 'textarea', ph: 'O que te faz feliz, seus sonhos, um programa perfeito…' },
       { id: 'pessoa_ideal', l: 'Descreva a pessoa dos seus sonhos', hint: 'opcional', type: 'textarea', ph: 'Como ela é, o que vocês fariam juntos…' },
-      { id: 'maior18', type: 'check', req: 1, l: 'Declaro que tenho 18 anos ou mais e que as informações são verdadeiras.' },
-      { id: 'lgpd', type: 'check', req: 1, l: 'Autorizo o uso dos meus dados para encontrar pessoas compatíveis, conforme a LGPD.' } ] }
+      { id: 'maior18', type: 'check', req: 1, l: 'Declaro que tenho <b>18 anos ou mais</b> e que as informações são verdadeiras.' },
+      { id: 'termos', type: 'check', req: 1, l: 'Li e aceito os <a href="privacidade.html#termos" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="privacidade.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.' },
+      { id: 'sensiveis', type: 'check', req: 1, l: '<b>Autorizo, de forma específica,</b> o uso das informações sobre <b>cor da pele, religião, posição política e o gênero que procuro</b> (dados sensíveis pela LGPD) <b>apenas</b> para encontrar pessoas compatíveis comigo. Posso retirar esta autorização quando quiser.' } ] }
   ];
   const CHEERS = ['Ótimo começo! 💛', 'Está ficando lindo! 🌹', 'Metade do caminho! ✨', 'Falta pouco! 💘', 'Última etapa! 💎'];
   const V = {}; // respostas
@@ -719,7 +724,10 @@
       procura_genero: V.procura_genero, intencao: s('intencao'), idade_min: V.idade[0], idade_max: V.idade[1] === 80 ? 120 : V.idade[1],
       distancia: V.distancia, pref_altura_min: semLimite('pref_altura') ? null : V.pref_altura[0], pref_altura_max: semLimite('pref_altura') ? null : V.pref_altura[1],
       pref_corpo: arr('pref_corpo'), deseja: arr('deseja'), pref_religiao: arr('pref_religiao'), pref_politica: arr('pref_politica'),
-      pref_fuma: arr('pref_fuma'), pref_bebe: arr('pref_bebe'), pref_filhos: s('pref_filhos'), sobre: s('sobre'), pessoa_ideal: s('pessoa_ideal')
+      pref_fuma: arr('pref_fuma'), pref_bebe: arr('pref_bebe'), pref_filhos: s('pref_filhos'), sobre: s('sobre'), pessoa_ideal: s('pessoa_ideal'),
+      // Registro do consentimento (o banco grava a data/hora oficial no momento do envio).
+      termos_versao: TERMOS_VERSAO, aceite_termos_em: V.termos ? new Date().toISOString() : null,
+      consentimento_sensiveis_em: V.sensiveis ? new Date().toISOString() : null
     };
     next.disabled = true; next.textContent = 'Enviando…';
     try {
@@ -733,6 +741,7 @@
       const m = String(err && err.message || '');
       alert(m.includes('SNM:duplicado') ? 'Já existe um cadastro com este e-mail ou WhatsApp. Se precisar alterar seus dados, fale com a nossa equipe.'
         : m.includes('SNM:limite') ? 'Recebemos muitos cadastros agora há pouco. Por favor, tente de novo em alguns minutos.'
+        : m.includes('SNM:termos') ? 'Para concluir, é preciso aceitar os Termos de Uso e autorizar o uso dos dados sensíveis.'
         : m.includes('SNM:grande') ? 'Algum campo ficou grande demais. Revise os textos e tente novamente.'
         : 'Não foi possível enviar seu cadastro agora. Verifique sua conexão e tente novamente.');
       next.disabled = false; next.textContent = 'Enviar cadastro ♥'; return;

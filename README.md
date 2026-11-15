@@ -19,6 +19,7 @@ O logo une duas rosas: a **vermelha** simboliza o **amor** e a **amarela** simbo
 index.html        Site público com o cadastro (grava no Supabase)
 admin.html        Painel admin: cadastros com filtros, pares compatíveis,
                   busca manual para amigos, pagamentos e links de pagamento
+privacidade.html  Termos de Uso e Política de Privacidade (LGPD)
 pagar.html        Página de pagamento da taxa (Mercado Pago · Checkout Pro)
 supabase/         Funções (Edge Functions) e alterações do banco
 assets/config.js  URL e chave pública do Supabase
@@ -59,6 +60,7 @@ Para ver, basta abrir o `index.html` no navegador. Também funciona direto no Gi
 - Trigger `proteger_cadastro`: barra e-mail/WhatsApp repetido, textos gigantes e mais de 20 cadastros em 10 minutos no site todo.
 - `criar-pagamento` só cobra de pares válidos (`par_valido`): compatíveis pelos critérios ou formados no painel.
 - `mp-webhook` não confia no conteúdo do aviso: consulta a order direto no Mercado Pago.
+- Cadastro exige aceite dos termos e consentimento específico para dados sensíveis (gravados com data/hora do servidor em `aceite_termos_em` / `consentimento_sensiveis_em`, versão em `termos_versao`). Ao mudar os termos, atualize a data no topo de `privacidade.html` e `TERMOS_VERSAO` no `index.html`.
 - Páginas com Content-Security-Policy e proteção contra serem abertas dentro de outro site (iframe).
 
 ## Próximos passos
@@ -68,4 +70,4 @@ Para ver, basta abrir o `index.html` no navegador. Também funciona direto no Gi
 - [x] Painel admin
 - [x] Pagamento via Pix e cartão (Mercado Pago)
 - [ ] Liberação do contato / agendamento do encontro após ambos pagarem
-- [ ] Página de política de privacidade (LGPD) e termos de uso
+- [x] Página de política de privacidade (LGPD) e termos de uso (`privacidade.html`), com aceite obrigatório no cadastro

@@ -369,6 +369,7 @@ async function abrir(id) {
       <div><span>E-mail</span><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div>
       <div><span>WhatsApp</span><a href="${zap(c.whatsapp)}" target="_blank" rel="noopener">${esc(c.whatsapp)}</a></div>
       <div><span>Nascimento</span>${new Date(c.nascimento + 'T12:00').toLocaleDateString('pt-BR')}</div>
+      <div><span>Aceite LGPD</span>${c.aceite_termos_em && c.consentimento_sensiveis_em ? `Termos e dados sensíveis em ${fmtHora(c.aceite_termos_em)} <span class="muted">(versão ${esc(c.termos_versao || '–')})</span>` : '<span class="muted">Cadastro anterior aos termos</span>'}</div>
     </div>
     <div class="block"><h3>Aparência</h3><div class="kv"><div><span>Altura</span>${c.altura ? c.altura + ' cm' : '–'}</div>${['corpo','pele','olhos','cabelo'].map(k => `<div><span>${R[k]}</span>${val(c[k])}</div>`).join('')}</div></div>
     <div class="block"><h3>Estilo de vida</h3>${kv(['estado_civil','filhos','quer_filhos','escolaridade','fuma','bebe','atividade','pets'])}</div>
