@@ -48,7 +48,7 @@ const q = new URLSearchParams(location.search);
 const c = q.get('c'), p = q.get('p'), r = q.get('r');
 const $c = document.getElementById('conteudo'), $t = document.getElementById('titulo');
 const { supabaseUrl, supabaseKey } = window.SNM_CONFIG;
-const zap = 'responda a mensagem que enviamos para você no WhatsApp';
+const zap = 'fale com a gente no WhatsApp <a href="https://wa.me/5551920017053" target="_blank" rel="noopener">(51) 92001-7053</a>';
 
 async function chamar(corpo) {
   const resp = await fetch(supabaseUrl + '/functions/v1/criar-pagamento', {
