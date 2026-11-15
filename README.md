@@ -35,6 +35,7 @@ assets/           Imagens das rosas e logo
   *Authentication → Users* no Supabase e rode: `insert into admins (email) values ('email@exemplo.com');`
 - `compatibilidades()`: pares compatíveis nos dois sentidos. Inegociáveis: gênero, idade, distância, religião, política, cigarro e filhos. Pontuação: personalidade, interesses, tipo físico, altura, bebida, vontade de ter filhos e intenção.
 - `buscar_para_amigo(...)`: busca manual no banco para alguém que não está cadastrado.
+- `apresentacoes`: andamento de cada par em que os dois pagaram (como vão se conhecer, local, data e anotações). No painel, a aba **Apresentações** gera as mensagens de WhatsApp. Em pares de homem e mulher, quem sugere o local do encontro é ela.
 - `pares_manuais`: pares formados pela equipe, que aparecem na lista mesmo fora dos critérios automáticos.
 - `analisar_par(x, y)`: compara duas pessoas quaisquer e explica, nos dois sentidos, qual inegociável barra o par e a afinidade no restante.
 
@@ -69,5 +70,7 @@ Para ver, basta abrir o `index.html` no navegador. Também funciona direto no Gi
 - [x] Cruzamento de dados
 - [x] Painel admin
 - [x] Pagamento via Pix e cartão (Mercado Pago)
-- [ ] Liberação do contato / agendamento do encontro após ambos pagarem
+- [x] Liberação do contato / agendamento do encontro após ambos pagarem (aba Apresentações, atendimento humano pelo WhatsApp)
+- [ ] Locais parceiros com mesa reservada
+- [ ] Criativos para Instagram e TikTok
 - [x] Página de política de privacidade (LGPD) e termos de uso (`privacidade.html`), com aceite obrigatório no cadastro
