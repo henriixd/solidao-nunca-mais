@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
 
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-  const { data: pessoas, error } = await db.from("cadastros").select("id, nome, email").in("id", [c, p]);
+  const { data: pessoas, error } = await db.from("cadastros").select("id, nome").in("id", [c, p]);
   if (error) return json({ erro: "Erro ao consultar cadastro" }, 500);
   const quem = pessoas?.find((x) => x.id === c);
   if (!quem || !pessoas?.some((x) => x.id === p)) return json({ erro: "Link de pagamento inválido" }, 404);
@@ -68,7 +68,8 @@ Deno.serve(async (req) => {
       external_reference: (c + p).replace(/-/g, ""),
       description: "Solidão Nunca Mais · Taxa de apresentação",
       expiration_time: "P3D",
-      payer: quem.email ? { email: quem.email } : undefined,
+      // Sem "payer": o e-mail do cadastro pode ser de uma conta real do Mercado Pago, o que
+      // bloqueia o modo teste ("uma das partes é de teste"). A pessoa informa os dados no checkout.
       items: [{ title: "Taxa de apresentação · Solidão Nunca Mais", unit_price: valor, quantity: 1 }],
       config: {
         online: {
