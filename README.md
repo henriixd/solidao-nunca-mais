@@ -34,6 +34,8 @@ assets/           Imagens das rosas e logo
   *Authentication → Users* no Supabase e rode: `insert into admins (email) values ('email@exemplo.com');`
 - `compatibilidades()`: pares compatíveis nos dois sentidos. Inegociáveis: gênero, idade, distância, religião, política, cigarro e filhos. Pontuação: personalidade, interesses, tipo físico, altura, bebida, vontade de ter filhos e intenção.
 - `buscar_para_amigo(...)`: busca manual no banco para alguém que não está cadastrado.
+- `pares_manuais`: pares formados pela equipe, que aparecem na lista mesmo fora dos critérios automáticos.
+- `analisar_par(x, y)`: compara duas pessoas quaisquer e explica, nos dois sentidos, qual inegociável barra o par e a afinidade no restante.
 
 ## Pagamentos (Mercado Pago)
 
