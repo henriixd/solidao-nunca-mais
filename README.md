@@ -52,6 +52,15 @@ Peças no Supabase:
 
 Para ver, basta abrir o `index.html` no navegador. Também funciona direto no GitHub Pages.
 
+## Segurança
+
+- Visitantes só podem **inserir** cadastros (sem ler, alterar ou apagar). Tabelas novas não ficam abertas por padrão: conceda permissões explicitamente.
+- Admin = usuário com e-mail confirmado no Supabase Auth **e** listado em `admins` (a tabela só se edita pelo SQL Editor).
+- Trigger `proteger_cadastro`: barra e-mail/WhatsApp repetido, textos gigantes e mais de 20 cadastros em 10 minutos no site todo.
+- `criar-pagamento` só cobra de pares válidos (`par_valido`): compatíveis pelos critérios ou formados no painel.
+- `mp-webhook` não confia no conteúdo do aviso: consulta a order direto no Mercado Pago.
+- Páginas com Content-Security-Policy e proteção contra serem abertas dentro de outro site (iframe).
+
 ## Próximos passos
 
 - [x] Salvar os cadastros no Supabase

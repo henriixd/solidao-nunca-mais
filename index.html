@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src https://fahybflzrylcbbavgczv.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Solidão Nunca Mais · Agência de Relacionamentos</title>
 <meta name="description" content="Cadastre-se grátis, conte como você é e quem você procura. Nós encontramos alguém compatível com você.">
@@ -729,7 +730,11 @@
       if (!resp.ok) throw new Error(await resp.text());
     } catch (err) {
       console.error(err);
-      alert('Não foi possível enviar seu cadastro agora. Verifique sua conexão e tente novamente.');
+      const m = String(err && err.message || '');
+      alert(m.includes('SNM:duplicado') ? 'Já existe um cadastro com este e-mail ou WhatsApp. Se precisar alterar seus dados, fale com a nossa equipe.'
+        : m.includes('SNM:limite') ? 'Recebemos muitos cadastros agora há pouco. Por favor, tente de novo em alguns minutos.'
+        : m.includes('SNM:grande') ? 'Algum campo ficou grande demais. Revise os textos e tente novamente.'
+        : 'Não foi possível enviar seu cadastro agora. Verifique sua conexão e tente novamente.');
       next.disabled = false; next.textContent = 'Enviar cadastro ♥'; return;
     }
     sucesso();

@@ -48,6 +48,11 @@ Deno.serve(async (req) => {
     .eq("cadastro_id", c).eq("par_id", p);
   if (count && count > 0) return json({ nome: primeiroNome, valor, ja_pago: true });
 
+  // Só cobra de pares de verdade: compatíveis pelos critérios ou formados pela equipe no painel.
+  const { data: valido, error: errPar } = await db.rpc("par_valido", { x: c, y: p });
+  if (errPar) return json({ erro: "Erro ao conferir o par" }, 500);
+  if (!valido) return json({ erro: "Link de pagamento inválido" }, 404);
+
   // A página só quer mostrar o nome e o valor antes do clique.
   if (consultar) return json({ nome: primeiroNome, valor, ja_pago: false });
 
