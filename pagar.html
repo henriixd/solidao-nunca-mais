@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pagamento · Solidão Nunca Mais</title>
+<link rel="icon" href="assets/logo-rosas.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--wine:#5a0f1f;--red:#C0152F;--gold:#F2B823;--cream:#fdf7f1;--blush:#f8e6e3;--ink:#2b1418;--muted:#7a5a5e;--line:#ecd4cf}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Jost",system-ui,sans-serif;color:var(--ink);line-height:1.6;min-height:100vh;display:grid;place-items:center;padding:24px;
+    background:radial-gradient(700px 400px at 85% 0%,rgba(242,184,35,.18),transparent 60%),radial-gradient(700px 500px at 0% 100%,rgba(192,21,47,.14),transparent 60%),var(--cream)}
+  .card{width:min(460px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:2.4rem 2rem;text-align:center;box-shadow:0 20px 50px -20px rgba(90,15,31,.35)}
+  .logo{width:84px;height:84px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--gold);margin-bottom:1rem}
+  .eyebrow{font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--red);font-weight:500}
+  h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;color:var(--wine);font-size:2.1rem;line-height:1.15;margin:.4rem 0 .8rem}
+  p{color:var(--muted)}
+  .preco{font-family:"Cormorant Garamond",serif;font-size:3rem;color:var(--wine);font-weight:700;margin:1.2rem 0 .2rem}
+  .preco small{font-family:"Jost";font-size:1rem;font-weight:400;color:var(--muted)}
+  ul{list-style:none;text-align:left;margin:1.2rem 0 1.6rem;display:grid;gap:.5rem;font-size:.95rem}
+  li::before{content:"🌹";margin-right:.5rem}
+  .btn{display:inline-flex;justify-content:center;width:100%;padding:1rem 1.6rem;border-radius:999px;border:0;font:500 1.05rem "Jost",sans-serif;cursor:pointer;text-decoration:none;
+    background:linear-gradient(135deg,var(--red),var(--wine));color:#fff;box-shadow:0 12px 30px -10px rgba(192,21,47,.7);transition:transform .2s}
+  .btn:hover{transform:translateY(-2px)} .btn:disabled{opacity:.6;cursor:wait;transform:none}
+  .nota{font-size:.82rem;margin-top:1rem}
+  .msg{padding:1rem;border-radius:14px;margin:1rem 0;font-size:.95rem}
+  .msg.ok{background:#eaf6ec;color:#1f5d2b} .msg.esp{background:#fff6e0;color:#7a5a0e} .msg.erro{background:var(--blush);color:var(--wine)}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main class="card">
+  <img class="logo" src="assets/logo-rosas.png" alt="Solidão Nunca Mais">
+  <div class="eyebrow">Solidão Nunca Mais</div>
+  <h1 id="titulo">Encontramos alguém para você</h1>
+  <div id="conteudo"><p>Carregando…</p></div>
+</main>
+
+<script src="assets/config.js"></script>
+<script>
+const q = new URLSearchParams(location.search);
+const c = q.get('c'), p = q.get('p'), r = q.get('r');
+const $c = document.getElementById('conteudo'), $t = document.getElementById('titulo');
+const { supabaseUrl, supabaseKey } = window.SNM_CONFIG;
+const zap = 'responda a mensagem que enviamos para você no WhatsApp';
+
+async function chamar(corpo) {
+  const resp = await fetch(supabaseUrl + '/functions/v1/criar-pagamento', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: supabaseKey },
+    body: JSON.stringify(corpo)
+  });
+  const d = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(d.erro || 'Não foi possível carregar o pagamento.');
+  return d;
+}
+const brl = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+
+function erro(texto) {
+  $t.textContent = 'Ops…';
+  $c.innerHTML = `<div class="msg erro">${texto}</div><p class="nota">Se precisar de ajuda, ${zap}.</p>`;
+}
+
+async function iniciar() {
+  if (!c || !p) return erro('Este link de pagamento está incompleto. Confira se você abriu o link inteiro que enviamos.');
+
+  // Voltando do Mercado Pago
+  if (r === 'aprovado') {
+    $t.textContent = 'Pagamento confirmado!';
+    $c.innerHTML = `<div class="msg ok">Recebemos o seu pagamento. 🌹</div>
+      <p>Assim que a outra pessoa também confirmar, nossa equipe entra em contato para liberar o contato ou combinar o encontro às cegas.</p>`;
+    return;
+  }
+  if (r === 'pendente') {
+    $t.textContent = 'Quase lá!';
+    $c.innerHTML = `<div class="msg esp">Seu pagamento está sendo processado.</div>
+      <p>Se você pagou com Pix, a confirmação costuma sair em poucos minutos. Não precisa pagar de novo: avisamos você assim que for aprovado.</p>`;
+    return;
+  }
+
+  let d;
+  try { d = await chamar({ c, p, consultar: true }); } catch (e) { return erro(e.message); }
+
+  if (d.ja_pago) {
+    $t.textContent = `Tudo certo, ${d.nome}!`;
+    $c.innerHTML = `<div class="msg ok">Este pagamento já foi confirmado.</div>
+      <p>Assim que a outra pessoa também confirmar, nossa equipe entra em contato com você.</p>`;
+    return;
+  }
+
+  $t.textContent = `${d.nome}, encontramos alguém para você`;
+  $c.innerHTML = `
+    ${r === 'recusado' ? '<div class="msg erro">O pagamento não foi concluído. Você pode tentar de novo, com outro cartão ou com Pix.</div>' : ''}
+    <p>Pelo nosso cruzamento, vocês combinam no que é importante para os dois.</p>
+    <div class="preco">${brl(d.valor)} <small>pagamento único</small></div>
+    <ul>
+      <li>Pix ou cartão de crédito</li>
+      <li>Pagamento seguro pelo Mercado Pago</li>
+      <li>Quando os dois pagarem, liberamos o contato ou marcamos um encontro às cegas</li>
+      <li>Nenhum dado seu é compartilhado antes disso</li>
+    </ul>
+    <button class="btn" id="pagar">Quero conhecer</button>
+    <p class="nota">Você será levado ao ambiente seguro do Mercado Pago.</p>`;
+
+  document.getElementById('pagar').addEventListener('click', async e => {
+    const b = e.currentTarget; b.disabled = true; b.textContent = 'Abrindo o Mercado Pago…';
+    try {
+      const x = await chamar({ c, p });
+      if (x.ja_pago) return location.reload();
+      location.href = x.url;
+    } catch (err) {
+      b.disabled = false; b.textContent = 'Quero conhecer';
+      alert(err.message);
+    }
+  });
+}
+iniciar();
+</script>
+</body>
+</html>

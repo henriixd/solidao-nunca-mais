@@ -239,7 +239,9 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const fmtData = d => new Date(d).toLocaleDateString('pt-BR');
 const fmtHora = d => new Date(d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-const zap = w => 'https://wa.me/' + (String(w).replace(/\D/g, '').replace(/^(?!55)/, '55'));
+const linkPagamento = (cadastroId, parId) => `${location.origin}/pagar.html?c=${cadastroId}&p=${parId}`;
+const msgPagamento = (c, link) => `Olá, ${c.nome.split(' ')[0]}! Aqui é da Solidão Nunca Mais 🌹 Encontramos uma pessoa compatível com você. Se quiser conhecer, o pagamento da taxa de apresentação é por aqui: ${link}`;
+const zap = w =>'https://wa.me/' + (String(w).replace(/\D/g, '').replace(/^(?!55)/, '55'));
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
 
 let CAD = [], PARES = [], byId = {}, sortKey = 'created_at', sortDir = -1;
@@ -359,7 +361,10 @@ async function abrir(id) {
         <div><label>Forma</label><select name="metodo"><option>Pix</option><option>Cartão de crédito</option></select></div>
         <div><label>Referente ao par</label><select name="par_id"><option value="">—</option>${pares.map(p => { const o = byId[p.a_id === id ? p.b_id : p.a_id]; return o ? `<option value="${o.id}">${esc(o.nome)}</option>` : ''; }).join('')}</select></div>
         <button class="btn small" type="submit">Registrar pagamento</button>
-      </form></div>
+      </form>
+      ${pares.length ? `<div style="margin-top:1rem"><label>Link de pagamento (Mercado Pago) para enviar a ${esc(c.nome.split(' ')[0])}</label>
+        <div class="tags">${pares.map(p => { const o = byId[p.a_id === id ? p.b_id : p.a_id]; return o ? `<span style="cursor:pointer" data-link="${o.id}" title="Copiar link">🔗 Par: ${esc(o.nome)}</span><a style="text-decoration:none" href="${zap(c.whatsapp)}?text=${encodeURIComponent(msgPagamento(c, linkPagamento(id, o.id)))}" target="_blank" rel="noopener" title="Enviar no WhatsApp">💬</a>` : ''; }).join(' ')}</div></div>` : ''}
+    </div>
     <div class="block"><h3>Anotações da equipe</h3><textarea id="dObs" rows="3">${esc(c.observacoes || '')}</textarea></div>
     <div class="actions">
       <div style="min-width:180px"><label>Status</label><select id="dStatus"><option value="ativo">Ativo</option><option value="pausado">Pausado</option><option value="encerrado">Encerrado</option></select></div>
@@ -367,6 +372,10 @@ async function abrir(id) {
     </div>`;
   $('#dStatus').value = c.status;
   $('#dBody').querySelectorAll('[data-open]').forEach(s => s.addEventListener('click', () => abrir(s.dataset.open)));
+  $('#dBody').querySelectorAll('[data-link]').forEach(s => s.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(linkPagamento(id, s.dataset.link)); toast('Link copiado'); }
+    catch { prompt('Copie o link:', linkPagamento(id, s.dataset.link)); }
+  }));
   $('#dBody').querySelectorAll('[data-delpag]').forEach(b => b.addEventListener('click', async () => {
     if (!confirm('Remover este pagamento?')) return;
     const { error } = await sb.from('pagamentos').delete().eq('id', b.dataset.delpag);
