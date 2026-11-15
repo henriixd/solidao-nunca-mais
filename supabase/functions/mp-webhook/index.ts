@@ -45,7 +45,10 @@ Deno.serve(async (req) => {
   // Order paga = status "processed". Qualquer outro estado (criada, pendente, recusada…) só é ignorado.
   if (ordem.status !== "processed") return new Response("ainda não pago", { status: 200 });
 
-  const [cadastroId, parId] = String(ordem.external_reference || "").split("|");
+  // external_reference = id do cadastro + id do par, sem hífens (32 + 32 caracteres).
+  const ref = String(ordem.external_reference || "").toLowerCase();
+  const comHifen = (h: string) => h.length === 32 ? `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}` : "";
+  const cadastroId = comHifen(ref.slice(0, 32)), parId = comHifen(ref.slice(32, 64));
   if (!UUID.test(cadastroId || "")) {
     console.error("Order paga sem referência válida", id, ordem.external_reference);
     return new Response("referência inválida", { status: 200 });

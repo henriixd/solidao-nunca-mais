@@ -45,6 +45,7 @@ Peças no Supabase:
 - `supabase/migrations/20261114_pagamentos_mercado_pago.sql`: rodar uma vez no SQL Editor.
 - Edge Functions `criar-pagamento` e `mp-webhook`, as duas com **Verify JWT desligado**.
 - Secret `MP_ACCESS_TOKEN`: Access Token do Mercado Pago. Para sair do modo teste, basta trocar pelo token de produção.
+- Webhook no Mercado Pago: Suas integrações → aplicação → **Webhooks → Configurar notificações**, evento **Order (Mercado Pago)**, URL `https://fahybflzrylcbbavgczv.supabase.co/functions/v1/mp-webhook` (configurar nas abas de teste e de produção).
 - Opcionais: `VALOR_TAXA` (padrão 70) e `SITE_URL` (padrão https://www.solidaonuncamais.com.br).
 
 Para ver, basta abrir o `index.html` no navegador. Também funciona direto no GitHub Pages.

@@ -2,6 +2,9 @@
 // e devolve o link para onde o cliente deve ser levado.
 //
 // Chamado pela página pagar.html com { c: <id do cadastro>, p: <id do par> }.
+// O aviso de pagamento (webhook) é configurado no painel do Mercado Pago:
+//   Suas integrações → aplicação → Webhooks → evento "Order (Mercado Pago)" →
+//   https://<projeto>.supabase.co/functions/v1/mp-webhook
 // Segredos necessários (Supabase → Edge Functions → Secrets):
 //   MP_ACCESS_TOKEN  Access Token do Mercado Pago (teste ou produção)
 //   SITE_URL         ex.: https://www.solidaonuncamais.com.br  (opcional)
@@ -48,7 +51,6 @@ Deno.serve(async (req) => {
   // A página só quer mostrar o nome e o valor antes do clique.
   if (consultar) return json({ nome: primeiroNome, valor, ja_pago: false });
 
-  const funcoes = `${Deno.env.get("SUPABASE_URL")}/functions/v1`;
   const volta = `${site}/pagar.html?c=${c}&p=${p}`;
 
   const resp = await fetch("https://api.mercadopago.com/v1/orders", {
@@ -62,13 +64,13 @@ Deno.serve(async (req) => {
       type: "online",
       processing_mode: "manual",
       total_amount: valor,
-      external_reference: `${c}|${p}`,
+      // Máx. 64 caracteres, só letras/números: os dois ids sem hífen, um depois do outro.
+      external_reference: (c + p).replace(/-/g, ""),
       description: "Solidão Nunca Mais · Taxa de apresentação",
       expiration_time: "P3D",
       payer: quem.email ? { email: quem.email } : undefined,
       items: [{ title: "Taxa de apresentação · Solidão Nunca Mais", unit_price: valor, quantity: 1 }],
       config: {
-        notification_url: `${funcoes}/mp-webhook`,
         online: {
           success_url: `${volta}&r=aprovado`,
           pending_url: `${volta}&r=pendente`,
