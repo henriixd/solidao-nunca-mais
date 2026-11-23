@@ -7,9 +7,13 @@ on:
       - ".github/workflows/android.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       TEM_CHAVE: ${{ secrets.SNM_KEYSTORE_BASE64 != '' && 'sim' || 'nao' }}
     defaults:
@@ -33,6 +37,32 @@ jobs:
         with:
           name: solidao-nunca-mais-teste
           path: android/app/build/outputs/apk/debug/*.apk
+
+      # Link fixo para baixar o APK de teste direto no celular
+      - name: Publicar APK de teste
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk "$RUNNER_TEMP/solidao-nunca-mais-teste.apk"
+          gh release delete app-teste -y --cleanup-tag || true
+          gh release create app-teste "$RUNNER_TEMP/solidao-nunca-mais-teste.apk" \
+            --prerelease --target "$GITHUB_SHA" --title "App para teste" \
+            --notes "Versão de teste do app Solidão Nunca Mais (não é a da Play Store). Gerada automaticamente a partir do commit $GITHUB_SHA."
+
+      # Imagens das telas, geradas sem celular, para conferir o visual
+      - name: Gerar capturas de tela
+        continue-on-error: true
+        run: ./gradlew --no-daemon recordRoborazziDebug
+
+      - name: Publicar capturas de tela
+        continue-on-error: true
+        run: |
+          mkdir -p "$RUNNER_TEMP/capturas"
+          cp app/build/capturas/*.png "$RUNNER_TEMP/capturas/"
+          cd "$RUNNER_TEMP/capturas"
+          git init -q && git checkout -q -b app-capturas
+          git add . && git -c user.name="github-actions" -c user.email="actions@github.com" commit -qm "Capturas de $GITHUB_SHA"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" app-capturas
 
       # Versão para a Play Store (.aab), só quando a chave de assinatura estiver
       # cadastrada nos "secrets" do repositório.
