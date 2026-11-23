@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -81,3 +82,6 @@ private val esquema = lightColorScheme(
 fun TemaSolidao(conteudo: @Composable () -> Unit) {
     MaterialTheme(colorScheme = esquema, typography = tipografia, content = conteudo)
 }
+
+/** Desliga as animações que repetem sem parar (usado só nas capturas de tela automáticas). */
+val LocalAnimacoesContinuas = staticCompositionLocalOf { true }

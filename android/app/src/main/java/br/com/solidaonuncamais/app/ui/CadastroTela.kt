@@ -73,6 +73,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -290,6 +291,7 @@ private fun Rotulo(texto: String, erro: Boolean, dica: String? = null, valor: St
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CampoPergunta(p: Pergunta, vm: CadastroViewModel, erro: Boolean, aoMudar: () -> Unit) {
     when (p) {
@@ -354,6 +356,8 @@ private fun CampoPergunta(p: Pergunta, vm: CadastroViewModel, erro: Boolean, aoM
                     onValueChange = { vm.respostas[p.id] = it.roundToInt() },
                     valueRange = p.min.toFloat()..p.max.toFloat(),
                     colors = coresSlider(),
+                    thumb = { Polegar() },
+                    track = { estado -> SliderDefaults.Track(sliderState = estado, colors = coresSlider(), drawStopIndicator = null, thumbTrackGapSize = 0.dp) },
                 )
             }
         }
@@ -368,6 +372,9 @@ private fun CampoPergunta(p: Pergunta, vm: CadastroViewModel, erro: Boolean, aoM
                     onValueChange = { r -> vm.respostas[p.id] = listOf(r.start.roundToInt(), r.endInclusive.roundToInt()) },
                     valueRange = p.min.toFloat()..p.max.toFloat(),
                     colors = coresSlider(),
+                    startThumb = { Polegar() },
+                    endThumb = { Polegar() },
+                    track = { estado -> SliderDefaults.Track(rangeSliderState = estado, colors = coresSlider(), drawStopIndicator = null, thumbTrackGapSize = 0.dp) },
                 )
             }
         }
@@ -570,6 +577,15 @@ private fun coresCampo() = OutlinedTextFieldDefaults.colors(
     errorContainerColor = Cores.Creme,
     cursorColor = Cores.Vermelho,
 )
+
+/** Bolinha branca com borda vermelha, como o controle deslizante do site. */
+@Composable
+private fun Polegar() {
+    Box(
+        Modifier.size(28.dp).shadow(4.dp, CircleShape, ambientColor = Cores.Vermelho, spotColor = Cores.Vermelho)
+            .background(Color.White, CircleShape).border(3.dp, Cores.Vermelho, CircleShape)
+    )
+}
 
 @Composable
 private fun coresSlider() = SliderDefaults.colors(

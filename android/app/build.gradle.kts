@@ -54,6 +54,8 @@ android {
     testOptions { unitTests.isIncludeAndroidResources = true }
 }
 
+tasks.withType<Test>().configureEach { maxHeapSize = "2g" }
+
 dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2025.06.00")
     implementation(composeBom)

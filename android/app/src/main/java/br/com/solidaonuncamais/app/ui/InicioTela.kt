@@ -75,8 +75,8 @@ private val Cartao = RoundedCornerShape(22.dp)
 
 /** Tela inicial: a mesma sequência de seções do site. */
 @Composable
-fun InicioTela(aoCadastrar: () -> Unit) {
-    val lista = rememberLazyListState()
+fun InicioTela(aoCadastrar: () -> Unit, itemInicial: Int = 0) {
+    val lista = rememberLazyListState(itemInicial)
     val escopo = rememberCoroutineScope()
     var pedirExclusao by rememberSaveable { mutableStateOf(false) }
 
@@ -175,9 +175,13 @@ private fun Selo(titulo: String, texto: String) {
 /** As duas rosas balançando, com as legendas, como no topo do site. */
 @Composable
 private fun RosasBalancando(modifier: Modifier = Modifier) {
-    val t = rememberInfiniteTransition(label = "rosas")
-    val vai by t.animateFloat(0f, 1f, infiniteRepeatable(tween(3500), RepeatMode.Reverse), label = "balanço")
-    val giro by t.animateFloat(0f, 360f, infiniteRepeatable(tween(60_000, easing = LinearEasing)), label = "anel")
+    var vai = 0.5f
+    var giro = 0f
+    if (LocalAnimacoesContinuas.current) {
+        val t = rememberInfiniteTransition(label = "rosas")
+        vai = t.animateFloat(0f, 1f, infiniteRepeatable(tween(3500), RepeatMode.Reverse), label = "balanço").value
+        giro = t.animateFloat(0f, 360f, infiniteRepeatable(tween(60_000, easing = LinearEasing)), label = "anel").value
+    }
     Box(modifier.aspectRatio(1f)) {
         Box(Modifier.fillMaxSize().padding(16.dp).clip(CircleShape).background(Brush.radialGradient(listOf(Color.White, Cores.Rosado, Color.Transparent))))
         Box(Modifier.fillMaxSize().graphicsLayer { rotationZ = giro }.border(1.dp, Cores.Vermelho.copy(alpha = 0.25f), CircleShape))

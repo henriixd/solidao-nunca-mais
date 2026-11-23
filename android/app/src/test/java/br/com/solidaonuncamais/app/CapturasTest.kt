@@ -1,9 +1,11 @@
 package br.com.solidaonuncamais.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import br.com.solidaonuncamais.app.data.CadastroViewModel
 import br.com.solidaonuncamais.app.ui.CadastroTela
 import br.com.solidaonuncamais.app.ui.InicioTela
+import br.com.solidaonuncamais.app.ui.LocalAnimacoesContinuas
 import br.com.solidaonuncamais.app.ui.SucessoTela
 import br.com.solidaonuncamais.app.ui.TemaSolidao
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -20,9 +22,16 @@ import org.robolectric.annotation.GraphicsMode
 class CapturasTest {
 
     private fun capturar(nome: String, tela: @Composable () -> Unit) =
-        captureRoboImage("build/capturas/$nome.png") { TemaSolidao { tela() } }
+        captureRoboImage("build/capturas/$nome.png") {
+            CompositionLocalProvider(LocalAnimacoesContinuas provides false) { TemaSolidao { tela() } }
+        }
 
-    @Test fun inicio() = capturar("01-inicio") { InicioTela(aoCadastrar = {}) }
+    @Test fun inicio() = capturar("01a-inicio") { InicioTela(aoCadastrar = {}) }
+    @Test fun inicioComoFunciona() = capturar("01b-inicio-como-funciona") { InicioTela(aoCadastrar = {}, itemInicial = 1) }
+    @Test fun inicioSimbolo() = capturar("01c-inicio-simbolo") { InicioTela(aoCadastrar = {}, itemInicial = 2) }
+    @Test fun inicioValores() = capturar("01d-inicio-valores") { InicioTela(aoCadastrar = {}, itemInicial = 3) }
+    @Test fun inicioDuvidas() = capturar("01e-inicio-duvidas") { InicioTela(aoCadastrar = {}, itemInicial = 4) }
+    @Test fun inicioRodape() = capturar("01f-inicio-final") { InicioTela(aoCadastrar = {}, itemInicial = 5) }
 
     private fun etapa(n: Int, preencher: CadastroViewModel.() -> Unit = {}) {
         val vm = CadastroViewModel().apply { preencher(); etapa = n - 1 }
