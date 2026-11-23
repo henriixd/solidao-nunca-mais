@@ -64,6 +64,15 @@ Para ver, basta abrir o `index.html` no navegador. Também funciona direto no Gi
 - Cadastro exige aceite dos termos e consentimento específico para dados sensíveis (gravados com data/hora do servidor em `aceite_termos_em` / `consentimento_sensiveis_em`, versão em `termos_versao`). Ao mudar os termos, atualize a data no topo de `privacidade.html` e `TERMOS_VERSAO` no `index.html`.
 - Páginas com Content-Security-Policy e proteção contra serem abertas dentro de outro site (iframe).
 
+## App Android (pasta `android/`)
+
+App nativo (Kotlin + Jetpack Compose) com as mesmas telas do site: início, cadastro em 6 etapas e tela de sucesso. O cadastro grava no Supabase do mesmo jeito que o `index.html` (mesmos campos, regras e mensagens de erro). O pagamento continua fora do app, pelo link do `pagar.html` enviado no WhatsApp.
+
+- Ao alterar opções do cadastro em `assets/campos.js`, altere também `android/.../data/Opcoes.kt`. Ao mudar os termos, atualize `TERMOS_VERSAO` em `android/.../data/Formulario.kt`.
+- A cada envio para o GitHub, o workflow **App Android** compila o app, publica o APK de teste em *Releases → App para teste* e gera imagens das telas no branch `app-capturas`.
+- Pacote para a Play Store (.aab): cadastre nos *secrets* do repositório `SNM_KEYSTORE_BASE64`, `SNM_KEYSTORE_PASSWORD`, `SNM_KEY_ALIAS` e `SNM_KEY_PASSWORD`. Sem eles, só o APK de teste é gerado.
+- Ícone da loja (512×512): `android/loja/icone-play-store-512.png`.
+
 ## Próximos passos
 
 - [x] Salvar os cadastros no Supabase
